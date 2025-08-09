@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="ARR"
+
+[[mods]]
+modId="peyroscythe"
+version="1.20.1-1.0.0"
+#logoFile="logo.png" #optional
+displayName="Iron's Spellbook: Scythes"
+authors="Iron, Rinko1231"
+description='''
+Backports the Hellrazor and Decrepit Scythe from Iron's Spells 'n Spellbooks 1.21.1 to the 1.20.1 version.
+'''

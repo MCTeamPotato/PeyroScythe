@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " F ",
+    "RDR",
+    " G "
+  ],
+  "key": {
+    "D": {
+      "item": "peyroscythe:decrepit_scythe"
+    },
+    "F": {
+      "item": "irons_spellbooks:fire_upgrade_orb"
+    },
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "R": {
+      "item": "irons_spellbooks:fire_rune"
+    }
+  },
+  "result": {
+    "item": "peyroscythe:hellrazor"
+  }
+}
