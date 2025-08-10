@@ -1,0 +1,14 @@
+{
+  "item_group.peyroscythe": "Peyro's Scythe",
+  "item.peyroscythe.ice_judgment": "Ice Judgement",
+  "item.peyroscythe.captain_greg": "\"Captain Greg\"",
+  "spell.peyroscythe.frost_hell": "Frost Hell",
+  "spell.peyroscythe.glacier": "Glacier Fall",
+  "spell.peyroscythe.frost_hell.guide": "Smash the ground with your weapon to unleash a frost shockwave in a frontal cone. Damage increases based on the weapon you wield.",
+  "spell.peyroscythe.glacier.guide": "Summon a massive iceberg above the target’s head and let it crash down. Higher spell levels summon larger icebergs.",
+  "death.attack.peyroscythe.frost_hell": "%1$s was blended into a frozen smoothie by %2$s.",
+  "death.attack.peyroscythe.frost_hell.item": "%1$s was blended into a frozen smoothie by %2$s using %3$s.",
+  "death.attack.peyroscythe.glacier": "%1$s experienced rapid glacial movement—head-first—thanks to %2$s.",
+  "death.attack.peyroscythe.glacier.item": "%1$s experienced rapid glacial movement—head-first—thanks to %2$s and their %3$s.",
+  "ui.irons_spellbooks.recast_count": "%d Casts"
+}

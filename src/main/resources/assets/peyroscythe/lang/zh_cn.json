@@ -1,0 +1,14 @@
+{
+  "item_group.peyroscythe": "佩伊洛的镰刀",
+  "item.peyroscythe.ice_judgment": "冰裁",
+  "item.peyroscythe.captain_greg": "\"格雷船长\"",
+  "spell.peyroscythe.frost_hell": "寒霜地狱",
+  "spell.peyroscythe.glacier": "冰山镇压",
+  "spell.peyroscythe.frost_hell.guide": "使用武器猛击地面，在前方扇形范围内产生冰霜震击，伤害根据持有的武器提升。",
+  "spell.peyroscythe.glacier.guide": "在目标头上召唤巨大冰山砸下，法术等级越高，冰山越大。",
+  "death.attack.peyroscythe.frost_hell": "%1$s被%2$s做成了冰沙。",
+  "death.attack.peyroscythe.frost_hell.item": "%1$s被%2$s用%3$s打成了冰沙。",
+  "death.attack.peyroscythe.glacier": "%2$s让%1$s见识到了冰川运动。",
+  "death.attack.peyroscythe.glacier.item": "%2$s用%3$s让%1$s见识到了冰川运动。",
+  "ui.irons_spellbooks.recast_count": "%d 施法次数"
+}

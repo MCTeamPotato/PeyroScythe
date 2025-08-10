@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="ARR"
+
+[[mods]]
+modId="peyroscythe"
+version="1.20.1-1.1.0"
+#logoFile="logo.png" #optional
+displayName="Peyro's Scythe"
+authors="Rinko1231"
+description='''
+
+'''
