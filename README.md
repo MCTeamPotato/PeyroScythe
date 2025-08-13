@@ -1,13 +1,13 @@
 # 佩伊洛的镰刀 / Peyro's Scythe
 
 **中文说明**  
-本模组是 **Iron's Spellbook** 的附属，添加了轻小说《来自深渊的我今天也要拯救人类》（*Savior from The Abyss*）中的部分内容：主角佩伊洛（Peyro）的镰刀 **“格雷船长” Captain Greg**、法术 **冰川坠落**、**死烟吞噬**、**业火焚身** 等等。  
+本模组是 **Iron's Spells 'n Spellbooks** 的附属，添加了轻小说《来自深渊的我今天也要拯救人类》中的部分内容：主角佩伊洛的镰刀 **“格雷船长”**、法术 **冰川坠落**、**死烟吞噬**、**业火焚身** 等等。  
 > 注：小说中并没有 **赤月** 与 **寒霜地狱** 这两个法术，它们是作者兴趣使然添加的。  
 
 ---
 
 **English Description**  
-This mod is an add-on for **Iron's Spellbook**, adding content from the light novel *Savior from The Abyss*, such as the protagonist Peyro’s scythe **"Captain Greg"**, and spells like **Glacier Fall**, **Death Smoke**, and **Sinfire Embrace**.  
+This mod is an add-on for **Iron's Spells 'n Spellbooks**, adding content from the light novel *Savior from The Abyss*, such as the protagonist Peyro’s scythe **"Captain Greg"**, and spells like **Glacier Fall**, **Death Smoke**, and **Sinfire Embrace**.  
 > Note: The spells **Crimson Moon** and **Frost Hell** are not in the novel; they were added purely out of the author’s personal interest.
 
 ---
