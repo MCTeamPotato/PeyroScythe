@@ -2,7 +2,7 @@
 
 **中文说明**  
 本模组是 **Iron's Spells 'n Spellbooks** 的附属，添加了轻小说《来自深渊的我今天也要拯救人类》中的部分内容：主角佩伊洛的镰刀 **“格雷船长”**、法术 **冰川坠落**、**死烟吞噬**、**业火焚身** 等等。  
-本模组提供了可在配置文件中调整的数值和功能，例如武器与法术的属性倍率、技能冷却、生命回复等。  
+本模组提供了可在配置文件中调整的数值和功能，例如法术和效果的属性倍率、技能冷却、生命回复等。  
 此外，**死烟侵蚀** 的生物黑名单、掉落 **失落的教宗骑士勋章** 与 **冬月之心** 的 Boss 清单，都可以通过 **数据包标签系统** 来自由修改和扩展，方便玩家或整合包作者自定义游戏体验。  
 > 注：小说中并没有 **赤月** 与 **寒霜地狱** 这两个法术，它们是作者兴趣使然添加的。  
 
@@ -10,7 +10,7 @@
 
 **English Description**  
 This mod is an add-on for **Iron's Spells 'n Spellbooks**, adding content from the light novel *Savior from The Abyss*, such as the protagonist Peyro’s scythe **"Captain Greg"**, and spells like **Glacier Fall**, **Death Smoke**, and **Sinfire Embrace**.  
-The mod includes configurable settings for attributes and mechanics, such as weapon and spell multipliers, skill cooldowns, and health regeneration.  
+The mod includes configurable settings for attributes and mechanics, such as spell and effect multipliers, skill cooldowns, and health regeneration.  
 In addition, the **Death Smoke Erosion** entity blacklist, as well as the list of bosses that drop the **Lost Medal of the Pontifical Knight** and **Heart of the Wintermoon**, can be customized via the **datapack tag system**, allowing players or modpack creators to tailor the experience.
 > Note: The spells **Crimson Moon** and **Frost Hell** are not in the novel; they were added purely out of the author’s personal interest.
 
