@@ -130,9 +130,8 @@ public class PeyroScythe {
                 || heldItem == itemRegistry.CAPTAIN_GREG.get()
                 || heldItem == itemRegistry.CAPTAIN_GREG_TRANSFORMABLE.get()
                 || heldItem == itemRegistry.CAPTAIN_GREG_LANCE.get()) {
-
-            // 1% 概率
-            if (player.level().random.nextFloat() < 0.01f) {
+            
+            if (player.level().random.nextFloat() < PeyroScytheConfig.entityDropDonutPossibility.get()) {
                 ItemStack donut = new ItemStack(itemRegistry.CAPTAIN_GREG_DONUT.get());
                 event.getDrops().add(new ItemEntity(
                         player.level(),

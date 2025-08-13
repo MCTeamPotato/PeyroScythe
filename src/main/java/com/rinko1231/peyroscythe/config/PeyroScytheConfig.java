@@ -51,6 +51,7 @@ public class PeyroScytheConfig {
     public static ForgeConfigSpec.BooleanValue entityDropKnightMedal;
     public static ForgeConfigSpec.BooleanValue entityDropWintermoonHeart;
     public static ForgeConfigSpec.DoubleValue entityDropCuriosItemPossibility;
+    public static ForgeConfigSpec.DoubleValue entityDropDonutPossibility;
 
     static {
 
@@ -92,7 +93,7 @@ public class PeyroScytheConfig {
 
         deathSmokeAllowLooting = BUILDER
                 .comment("Whether Death Smoke can be obtained from loot chests")
-                .define("deathSmokeAllowLooting",false);
+                .define("deathSmokeAllowLooting",true);
         deathSmokeBasicKillThreshold = BUILDER
                 .comment("Basic health percentage threshold to instantly kill")
                 .defineInRange("deathSmokeBasicKillThreshold", 0.05 ,0, 1);
@@ -116,7 +117,7 @@ public class PeyroScytheConfig {
 
         crimsonMoonAllowLooting = BUILDER
                 .comment("Whether Crimson Moon can be obtained from loot chests")
-                .define("Crimson Moon can be found in loot chests",false);
+                .define("Crimson Moon can be found in loot chests",true);
 
         crimsonMoonDurationBasicTicks = BUILDER
                 .comment("Base duration of Crimson Moon in ticks")
@@ -185,7 +186,7 @@ public class PeyroScytheConfig {
 
         BUILDER.pop();
 
-        BUILDER.push("Curios Drop Setting");
+        BUILDER.push("MISC");
 
         entityDropKnightMedal = BUILDER
                 .comment("Whether Pontifical Knight Medal can drop from entities")
@@ -196,6 +197,9 @@ public class PeyroScytheConfig {
         entityDropCuriosItemPossibility = BUILDER
                 .comment("Chance of dropping Knight Medal or Wintermoon Heart without killing with Holy or Ice Spell")
                 .defineInRange("entityDropCuriosItemPossibility", 0.33F ,0, 1);
+        entityDropDonutPossibility = BUILDER
+                .comment("Chance of dropping Captain Greg Donut with certain Weapons")
+                .defineInRange("entityDropCuriosItemPossibility", 0.01F ,0, 1);
 
 
         SPEC = BUILDER.build();
