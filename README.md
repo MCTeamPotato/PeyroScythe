@@ -5,8 +5,9 @@
 - 主角 **佩伊洛** 的可变形镰刀 **“格雷船长”**  
 - 法术 **冰川坠落**  
 - 法术 **死烟吞噬**  
-- 法术 **业火焚身**  
-- ……以及更多特色元素  
+- 法术 **业火焚身**
+- 项链 **冬月之心**   
+- ……以及其他特色元素  
 
 > 注：小说中并没有“赤月 (Crimson Moon)”和“寒霜地狱 (Frost Hell)”两个法术，它们是作者出于个人兴趣而额外添加的内容。  
 
@@ -17,7 +18,8 @@ This mod is an **addon for *Iron's Spellbook***, bringing content from the light
 - The main character **Peyro**’s transfromable scythe, **"Captain Greg"**  
 - Spell **Glacier Fall**  
 - Spell **Death Smoke**  
-- Spell **Sinfire Embrace**  
+- Spell **Sinfire Embrace**
+- Necklace **Wintermoon Heart** 
 - …and other thematic elements  
 
 > Note: The spells **Crimson Moon** and **Frost Hell** do **not** appear in the original novel. They are additional content created purely out of the author's personal interest.
