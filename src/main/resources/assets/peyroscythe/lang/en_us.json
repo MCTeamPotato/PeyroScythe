@@ -1,0 +1,47 @@
+{
+  "item_group.peyroscythe": "Peyro's Scythe",
+  "item.peyroscythe.ice_judgment": "Ice Judgement",
+  "item.peyroscythe.captain_greg": "\"Captain Greg\"",
+  "item.peyroscythe.captain_greg_transformable": "\"Captain Greg\"（Transformable）",
+  "item.peyroscythe.captain_greg_lance": "\"Captain Greg\"（Lance）",
+  "item.peyroscythe.captain_greg_donut": "Captain Greg Donut",
+  "item.peyroscythe.pontifical_knight_medal": "Lost Medal of the Pontifical Knight",
+  "item.peyroscythe.wintermoon_heart": "Heart of The Wintermoon",
+
+  "tooltip.item.peyroscythe.pontifical_knight_medal": "Buried with the memories of a life once left behind.",
+  "tooltip.item.peyroscythe.pontifical_knight_medal2": "She never wore it again.",
+  "tooltip.item.peyroscythe.wintermoon_heart": "An heirloom of the Wintermoon family.",
+  "tooltip.item.peyroscythe.captain_greg_donut": "Capt. Hanson Gregory. Recognized by the National Bakers Association as the inventor of the doughnut.",
+  "tooltip.peyroscythe.morphing_weapon.transforms_into": "Can be Transformed into：%s",
+
+  "entity.peyroscythe.ice_quake": "Ice Quake",
+  "entity.peyroscythe.glacier_ice_block_projectile": "Glacier",
+  "entity.peyroscythe.death_smoke": "Death Smoke",
+  "entity.peyroscythe.crimson_moon": "Crimson Moon",
+
+  "effect.peyroscythe.death_smoke_erosion": "Death Smoke Erosion",
+  "effect.peyroscythe.moon_frenzy": "Moon Frenzy",
+  "effect.peyroscythe.sinfire_embrace": "Sinfire Embrace",
+
+  "spell.peyroscythe.frost_hell": "Frost Hell",
+  "spell.peyroscythe.glacier": "Glacier Fall",
+  "spell.peyroscythe.death_smoke": "Death Smoke",
+  "spell.peyroscythe.crimson_moon": "Crimson Moon",
+  "spell.peyroscythe.sinfire_embrace": "Sinfire Embrace",
+
+  "spell.peyroscythe.crimson_moon.guide": "Raise the Crimson Moon, applying Moon Frenzy to all creatures within range: increases attack damage, attack speed, and Blood school spell power, and restores the Crimson Moon's owner's health when dealing damage.",
+  "spell.peyroscythe.sinfire_embrace.guide": "Ignite yourself with fire, temporarily losing armor but gaining powerful health regeneration. Attacks ignite targets, and killing a creature extends the effect duration — but once the flames are extinguished, the effect ends immediately.",
+  "spell.peyroscythe.frost_hell.guide": "Smash the ground with your weapon to unleash a frost shockwave in a frontal cone. Damage increases based on the weapon you wield.",
+  "spell.peyroscythe.glacier.guide": "Summon a massive iceberg above the target’s head and let it crash down. Higher spell levels summon larger icebergs.",
+  "spell.peyroscythe.death_smoke.guide": "Engulf enemies in death smoke, gradually corroding them. If the corrosion becomes severe enough, the target will perish, restoring your health and mana.",
+
+  "death.attack.peyroscythe.frost_hell": "%1$s was blended into a frozen smoothie by %2$s.",
+  "death.attack.peyroscythe.frost_hell.item": "%1$s was blended into a frozen smoothie by %2$s using %3$s.",
+  "death.attack.peyroscythe.glacier": "%1$s experienced rapid glacial movement—head-first—thanks to %2$s.",
+  "death.attack.peyroscythe.glacier.item": "%1$s experienced rapid glacial movement—head-first—thanks to %2$s and their %3$s.",
+  "death.attack.peyroscythe.death_smoke": "%1$s became %2$s's snack with Death Smoke.",
+  "death.attack.peyroscythe.death_smoke.item": "%1$s became a piece of snack by %2$s using Death Smoke brought by %3$s.",
+
+  "ui.peyroscythe.health_regen": "Max Health Regeneration per Second",
+  "ui.irons_spellbooks.recast_count": "%d Casts"
+}

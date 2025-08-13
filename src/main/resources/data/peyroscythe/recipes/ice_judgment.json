@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " F ",
+    "RDR",
+    " G "
+  ],
+  "key": {
+    "D": {
+      "item": "peyroscythe:captain_greg"
+    },
+    "F": {
+      "item": "irons_spellbooks:ice_upgrade_orb"
+    },
+    "G": {
+      "item": "irons_spellbooks:frosted_helve"
+    },
+    "R": {
+      "item": "irons_spellbooks:ice_rune"
+    }
+  },
+  "result": {
+    "item": "peyroscythe:ice_judgment"
+  }
+}
