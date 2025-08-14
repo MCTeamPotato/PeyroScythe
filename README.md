@@ -23,7 +23,7 @@ In addition, the **Death Smoke Erosion** entity blacklist, as well as the list o
 - **EN**: A tribute to Peyro’s ice-sculpted scythe in the original novel. Comes with the **Frost Hell** spell by default. Craftable.
 
 ### “格雷船长” / "Captain Greg"
-- **CN**: 主角佩伊洛的标志性镰刀，可合成，有可变形版与不可变形版两种。  
+- **CN**: 主角佩伊洛的标志性镰刀，可合成，有可变形版与不可变形版。  
   - 可变形版：对空气潜行右击可切换为长枪形态。  
 - **EN**: Peyro’s signature scythe. Craftable in both transformable and non-transformable versions.  
   - Transformable version: Sneak + Right Click in air to switch into lance form.
