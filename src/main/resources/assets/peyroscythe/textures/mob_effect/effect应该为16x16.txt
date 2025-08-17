@@ -1,3 +1,5 @@
 moon_frenzy：设定上是赤月照耀下的疯狂效果，所以姑且画成了眼露红光嘴角流血的狼头，也可以有别的表达。
-death_smoke_erosion：对应法术的效果标记。
-sinfire_embrace：对应法术的效果标记。
+death_smoke_erosion：对应法术的效果标记。在黑烟中融化的骷髅头。
+sinfire_embrace：对应法术的效果标记。在火焰中燃烧的狂信徒。
+frozen：被冻成冰块的人。
+frost_fog_mark: 新版本改名为冻结抗性，能暂时抵抗frozen效果。
