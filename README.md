@@ -55,6 +55,14 @@ In addition, the **Death Smoke Erosion** entity blacklist, as well as the list o
 ### 业火焚身 / Sinfire Embrace
 - **CN**: 将自身点燃以换取高额生命回复与点燃攻击效果，击杀生物可延长持续时间，但火焰熄灭则效果立即结束。  
 - **EN**: Set yourself ablaze to gain powerful health regeneration and ignite enemies on attack. Killing creatures extends the duration, but the effect ends immediately if the flames go out.
+
+### 冰陨雨 / Icy Comet Rain
+- **CN**: 下起冰陨石雨，法术等级和法术强度越高，陨石越多，短时间被冰陨石砸中多次的生物会被冻结。
+- **EN**: Call down a shower of icy comets. Stronger levels bring heavier storms. Anything unlucky enough to be pelted too often in a short time will end up frozen solid.
+
+### 冰霜世界 / The Frozen World
+- **CN**: 瞬间降低周围温度，形成冰雪，离自己较近的生物会受到基于最大生命值的伤害并被立刻被冻结，同时生成冰雾。
+- **EN**: Instantly lowers the surrounding temperature, creating snow and ice. Creatures close to the caster take damage based on their maximum health and are immediately frozen, while an frost fog is generated.
   
 ### 寒霜地狱 / Frost Hell
 - **CN**: 使用武器猛击地面，在前方扇形范围内释放冰霜震击。伤害随手中武器而提升。  
