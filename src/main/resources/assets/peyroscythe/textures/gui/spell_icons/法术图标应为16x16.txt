@@ -1,5 +1,0 @@
-crimson_moon: 散发不详红光的赤月
-death_smoke: 在黑烟中融化的骷髅头
-frost_hell: 开裂的冰川和迸发的霜火
-glacier：从天而落的巨大冰山
-sinfire_embrace：自燃的狂信徒
