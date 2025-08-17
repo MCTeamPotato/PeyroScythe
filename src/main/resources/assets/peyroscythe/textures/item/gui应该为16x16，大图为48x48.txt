@@ -1,4 +1,8 @@
 captain_greg：能变形的黑色镰刀
+名字里没有标记pa的是漫画版，标记的是自设版。
+大图应该注意手持位置。
 captain_greg_transformable：实现变形武器的测试，材质和captain_greg一样，如果变形武器没什么bug，以后只有一个captain_greg
 captain_greg_lance：captain_greg变成的长枪，或许可以参考RWBY里的QROW叔的武器。
+pontifical knight medal: 金色鸢尾兰勋章，或许可以加一点污秽。
+wintermoon heart: 弯月形蓝宝石项链。
 ice_judgment：魔力凝结成的冰霜镰刀
