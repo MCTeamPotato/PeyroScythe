@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " F ",
+    "NMN",
+    " F "
+  ],
+  "key": {
+    "N": {
+      "item": "irons_spellbooks:frosted_helve"
+    },
+    "M": {
+      "item": "peyroscythe:captain_greg_donut"
+    },
+    "F": {
+      "item": "minecraft:ice"
+    }
+  },
+  "result": {
+    "item": "peyroscythe:clair_de_lune_disc"
+  }
+}

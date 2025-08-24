@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="GPLv3"
+
+[[mods]]
+modId="peyroscythe"
+version="1.20.1-1.1.4"
+#logoFile="logo.png" #optional
+displayName="Peyro's Scythe"
+authors="Rinko1231"
+description='''
+Add some spells, weapons, etc. from the light novel, Savior From the Abyss.
+Thanks to some Free assets from ssugmi, VerArc Stash, Kyrises!
+The new record "Clair de Lune" in this mod features a piano performance by Laurens Goedhart (2011).
+The audio file is hosted on Wikimedia Commons CC BY 3.0 license.
+'''
