@@ -168,11 +168,13 @@ dependencies {
     implementation fg.deobf("curse.maven:geckolib-388172:6027567")
     runtimeOnly fg.deobf("curse.maven:caelus-308989:5281700")
     implementation fg.deobf("curse.maven:irons-spells-n-spellbooks-855414:6488484")
-    implementation fg.deobf("curse.maven:tinkers-construct-74072:6777068")
+    //implementation fg.deobf("curse.maven:tinkers-construct-74072:6777068")
     runtimeOnly fg.deobf("curse.maven:mantle-74924:6819217")
 
     runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:6860192")
     runtimeOnly fg.deobf("curse.maven:selene-499980:6846127")
+
+    runtimeOnly fg.deobf("curse.maven:create-328085:6641603")
 
     //runtimeOnly fg.deobf("curse.maven:kubejs-irons-spells-980834:5736059")
     //runtimeOnly fg.deobf("curse.maven:kubejs-238086:5853326")
