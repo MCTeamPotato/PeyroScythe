@@ -1,0 +1,11 @@
+{
+  "records.clair_de_lune": {
+	"category": "record",
+    "sounds": [
+      {
+        "name": "peyroscythe:music/records/clair_de_lune",
+        "stream": true
+      }
+    ]
+  }
+}

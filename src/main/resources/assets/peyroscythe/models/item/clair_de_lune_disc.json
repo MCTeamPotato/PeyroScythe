@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "minecraft:item/template_music_disc",
+    "textures": {
+      "layer0": "peyroscythe:item/music_disc_clair_de_lune"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/template_music_disc",
+      "textures": {
+        "layer0": "peyroscythe:item/music_disc_clair_de_lune_gui"
+      }
+    }
+  }
+}

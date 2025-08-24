@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "peyroscythe:item/template_verylarge_sword",
+    "textures": {
+      "layer0": "peyroscythe:item/captain_greg_lance_pa"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/handheld",
+      "textures": {
+        "layer0": "peyroscythe:item/captain_greg_lance_pa_gui"
+      }
+    }
+  }
+}

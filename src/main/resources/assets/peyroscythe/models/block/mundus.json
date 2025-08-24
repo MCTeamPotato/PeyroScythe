@@ -1,0 +1,20 @@
+{
+  "parent": "block/cube_all",
+  "elements": [
+    {
+      "from": [4, 4, 4],
+      "to":   [12, 12, 12],
+      "faces": {
+        "north": {"texture": "#all"},
+        "south": {"texture": "#all"},
+        "east":  {"texture": "#all"},
+        "west":  {"texture": "#all"},
+        "up":    {"texture": "#all"},
+        "down":  {"texture": "#all"}
+      }
+    }
+  ],
+  "textures": {
+    "all": "peyroscythe:block/mundus"
+  }
+}
