@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wither",
+    "minecraft:slime",
+    "minecraft:player",
+    "minecraft:ender_dragon",
+    "irons_spellbooks:dead_king",
+    "irons_spellbooks:dead_king_corpse"
+  ]
+}

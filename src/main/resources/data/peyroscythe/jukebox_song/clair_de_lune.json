@@ -1,0 +1,8 @@
+{
+  "sound_event": "peyroscythe:records.clair_de_lune",
+  "length_in_seconds": 304,
+  "comparator_output": 15,
+  "description": {
+    "translate": "jukebox_song.peyroscythe.clair_de_lune_disc"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "peyroscythe:item/captain_greg_donut"
+  }
+}

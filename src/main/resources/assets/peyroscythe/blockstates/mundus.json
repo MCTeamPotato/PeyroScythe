@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "lum=0":  { "model": "peyroscythe:block/mundus" },
+    "lum=1":  { "model": "peyroscythe:block/mundus" },
+    "lum=2":  { "model": "peyroscythe:block/mundus" },
+    "lum=3":  { "model": "peyroscythe:block/mundus" },
+    "lum=4":  { "model": "peyroscythe:block/mundus" },
+    "lum=5":  { "model": "peyroscythe:block/mundus" },
+    "lum=6":  { "model": "peyroscythe:block/mundus" },
+    "lum=7":  { "model": "peyroscythe:block/mundus" },
+    "lum=8":  { "model": "peyroscythe:block/mundus" },
+    "lum=9":  { "model": "peyroscythe:block/mundus" },
+    "lum=10": { "model": "peyroscythe:block/mundus" },
+    "lum=11": { "model": "peyroscythe:block/mundus" },
+    "lum=12": { "model": "peyroscythe:block/mundus" },
+    "lum=13": { "model": "peyroscythe:block/mundus" },
+    "lum=14": { "model": "peyroscythe:block/mundus" },
+    "lum=15": { "model": "peyroscythe:block/mundus" }
+  }
+}
