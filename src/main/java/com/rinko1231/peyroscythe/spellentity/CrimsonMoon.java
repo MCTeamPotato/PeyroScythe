@@ -240,8 +240,8 @@ public class CrimsonMoon extends Projectile implements AntiMagicSusceptible {
 
         // 召唤生物：取召唤者再递归
         if (entity instanceof MagicSummon summon) {
-            LivingEntity summoner = summon.getSummoner();
-            if (summoner != null) {
+            Entity summoner = summon.getSummoner();
+            if (summoner instanceof LivingEntity live_summoner) {
                 return getEntityOwnerUUID(summoner, depth + 1);
             }
         }
