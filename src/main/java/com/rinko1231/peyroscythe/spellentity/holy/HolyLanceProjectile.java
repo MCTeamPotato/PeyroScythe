@@ -5,8 +5,6 @@ package com.rinko1231.peyroscythe.spellentity.holy;
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
 import com.rinko1231.peyroscythe.init.EntityRegistry;
 import com.rinko1231.peyroscythe.init.NewSpellRegistry;
-import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
-import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.spells.AbstractMagicProjectile;
@@ -20,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class HolyLanceProjectile extends AbstractMagicProjectile {
     private int maxPierce = 3; // 最大穿透次数
@@ -58,8 +57,8 @@ public class HolyLanceProjectile extends AbstractMagicProjectile {
         return 3.5F;
     }
 
-    public Optional<SoundEvent> getImpactSound() {
-        return Optional.of(SoundEvents.TRIDENT_HIT);
+    public Optional<Supplier<SoundEvent>> getImpactSound() {
+        return Optional.of(()->SoundEvents.TRIDENT_HIT);
     }
 
     @Override

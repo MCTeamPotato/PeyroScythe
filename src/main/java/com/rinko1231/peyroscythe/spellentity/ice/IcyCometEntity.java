@@ -25,6 +25,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.rinko1231.peyroscythe.init.EntityRegistry.ICY_COMET;
 
@@ -71,8 +72,8 @@ public class IcyCometEntity extends AbstractMagicProjectile {
             this.level().playSound((Player)null, this.getX(), this.getY(), this.getZ(), sound, SoundSource.NEUTRAL, 0.8F, 1.35F + Utils.random.nextFloat() * 0.3F);
         }
 
-        public Optional<SoundEvent> getImpactSound() {
-            return Optional.of(SoundEvents.GENERIC_EXPLODE);
+        public Optional<Supplier<SoundEvent>> getImpactSound() {
+            return Optional.of(()->SoundEvents.GENERIC_EXPLODE);
         }
 
         protected void onHit(HitResult hitResult) {

@@ -14,3 +14,10 @@ Thanks to some Free assets from ssugmi, VerArc Stash, Kyrises!
 The new record "Clair de Lune" in this mod features a piano performance by Laurens Goedhart (2011).
 The audio file is hosted on Wikimedia Commons CC BY 3.0 license.
 '''
+[[dependencies.peyroscythe]]
+modId="curios"
+mandatory=true
+versionRange="[5.14.1,)"
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+ordering="NONE"
+side="BOTH"

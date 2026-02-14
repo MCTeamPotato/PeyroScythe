@@ -167,7 +167,7 @@ public class SummonedBlaze extends Blaze implements MagicSummon {
 
     @Override
     public void onRemovedFromWorld() {
-        this.onRemovedHelper(this, (SummonTimer) MobEffectRegistry.SUMMON_BLAZE_TIMER.get());
+        this.onRemovedHelper(this, MobEffectRegistry.SUMMON_BLAZE_TIMER);
         super.onRemovedFromWorld();
     }
 
