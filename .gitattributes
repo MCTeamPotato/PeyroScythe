@@ -1,0 +1,18 @@
+# Normalize every text file to LF, both in the repository and in the working tree.
+# Modern Windows cmd.exe handles LF-only batch files fine, so gradlew.bat stays LF too.
+* text=auto eol=lf
+
+# Binary assets: never normalize, never diff as text.
+*.png  binary
+*.ogg  binary
+*.jar  binary
+*.zip  binary
+
+# Editors/languages
+*.java  text
+*.gradle text
+*.properties text
+*.json  text
+*.toml  text
+*.cfg   text
+*.md    text
