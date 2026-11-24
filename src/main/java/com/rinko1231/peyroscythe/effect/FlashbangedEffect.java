@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class FlashbangedEffect extends MagicMobEffect {
 
         public FlashbangedEffect() {
-            super(MobEffectCategory.BENEFICIAL, 0x555555); // 灰色
+            super(MobEffectCategory.HARMFUL, 0x555555);
         }
 
         @Override

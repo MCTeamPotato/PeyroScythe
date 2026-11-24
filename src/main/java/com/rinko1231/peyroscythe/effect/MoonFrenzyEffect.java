@@ -36,17 +36,29 @@ public class MoonFrenzyEffect extends MagicMobEffect {
         double speedBonus  = PeyroScytheConfig.MoonFrenzyAttackSpeedBoostBasicRatio.get() + PeyroScytheConfig.MoonFrenzyAttackSpeedBoostRatioGrowthPerLevel.get() * amplifier;
         double bloodBonus  = PeyroScytheConfig.MoonFrenzyBloodPowerBoostBasicRatio.get() + PeyroScytheConfig.MoonFrenzyBloodPowerBoostRatioGrowthPerLevel.get() * amplifier;
 
-        if (entity.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+        if (entity.getAttribute(Attributes.ATTACK_DAMAGE) != null
+        &&  entity.getAttribute(Attributes.ATTACK_DAMAGE).getModifier(ATTACK_DAMAGE_UUID) == null
+        ) {
+            //！？修修？！
+            //entity.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(ATTACK_DAMAGE_UUID);
             entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
                     new AttributeModifier(ATTACK_DAMAGE_UUID, "moon_frenzy_attack_damage",
                             damageBonus, AttributeModifier.Operation.MULTIPLY_BASE));
         }
-        if (entity.getAttribute(Attributes.ATTACK_SPEED) != null) {
+        if (entity.getAttribute(Attributes.ATTACK_SPEED) != null
+        &&  entity.getAttribute(Attributes.ATTACK_SPEED).getModifier(ATTACK_SPEED_UUID) == null
+        ) {
+            //！？修修？！
+            //entity.getAttribute(Attributes.ATTACK_SPEED).removeModifier(ATTACK_SPEED_UUID);
             entity.getAttribute(Attributes.ATTACK_SPEED).addTransientModifier(
                     new AttributeModifier(ATTACK_SPEED_UUID, "moon_frenzy_attack_speed",
                             speedBonus, AttributeModifier.Operation.MULTIPLY_BASE));
         }
-        if (entity.getAttribute(AttributeRegistry.BLOOD_SPELL_POWER.get()) != null) {
+        if (entity.getAttribute(AttributeRegistry.BLOOD_SPELL_POWER.get()) != null
+        &&  entity.getAttribute(AttributeRegistry.BLOOD_SPELL_POWER.get()).getModifier(BLOOD_POWER_UUID) == null
+        ) {
+            //！？修修？！
+            //entity.getAttribute(AttributeRegistry.BLOOD_SPELL_POWER.get()).removeModifier(BLOOD_POWER_UUID);
             entity.getAttribute(AttributeRegistry.BLOOD_SPELL_POWER.get()).addTransientModifier(
                     new AttributeModifier(BLOOD_POWER_UUID, "moon_frenzy_blood_power_bonus",
                             bloodBonus, AttributeModifier.Operation.MULTIPLY_BASE));

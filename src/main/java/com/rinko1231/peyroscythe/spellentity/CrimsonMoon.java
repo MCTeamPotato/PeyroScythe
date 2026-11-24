@@ -6,9 +6,9 @@ import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
-import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.mobs.AntiMagicSusceptible;
 
+import io.redspace.ironsspellbooks.entity.mobs.IMagicSummon;
 import io.redspace.ironsspellbooks.entity.mobs.MagicSummon;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
@@ -239,8 +239,8 @@ public class CrimsonMoon extends Projectile implements AntiMagicSusceptible {
         }
 
         // 召唤生物：取召唤者再递归
-        if (entity instanceof MagicSummon summon) {
-            LivingEntity summoner = summon.getSummoner();
+        if (entity instanceof IMagicSummon summon) {
+            Entity summoner = summon.getSummoner();
             if (summoner != null) {
                 return getEntityOwnerUUID(summoner, depth + 1);
             }

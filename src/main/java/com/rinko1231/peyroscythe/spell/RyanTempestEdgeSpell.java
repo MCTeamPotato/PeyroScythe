@@ -59,6 +59,9 @@ public class RyanTempestEdgeSpell extends AbstractSpell {
 
     @Override
     public boolean allowLooting() {
+        return false; //暂时ban了
+    }
+    public boolean isEnabled() {
         return false;
     }
 

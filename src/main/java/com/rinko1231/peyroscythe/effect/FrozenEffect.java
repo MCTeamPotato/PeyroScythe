@@ -1,5 +1,5 @@
 package com.rinko1231.peyroscythe.effect;
-
+/*
 import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.spellentity.ice.IceTombEntity;
 import io.redspace.ironsspellbooks.api.util.Utils;
@@ -11,6 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 import static java.lang.Math.max;
+
 
 public class FrozenEffect extends MagicMobEffect {
 
@@ -45,6 +46,7 @@ public class FrozenEffect extends MagicMobEffect {
             else
                 iceTombEntity.setLifetime(20 * 5);
             pLivingEntity.level().addFreshEntity(iceTombEntity);
+            pLivingEntity.stopRiding();
             pLivingEntity.startRiding(iceTombEntity, true);
             pLivingEntity.playSound(SoundRegistry.ICE_SPIKE_EMERGE.get(), 2, Utils.random.nextInt(9, 11) * .1f);
             pLivingEntity.removeEffect(this);
@@ -53,4 +55,4 @@ public class FrozenEffect extends MagicMobEffect {
         }
         return;
     }
-}
+}*/

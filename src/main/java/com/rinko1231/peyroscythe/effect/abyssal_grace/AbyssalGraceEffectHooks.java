@@ -1,9 +1,14 @@
 package com.rinko1231.peyroscythe.effect.abyssal_grace;
 
 import com.rinko1231.peyroscythe.init.MobEffectRegistry;
+import com.rinko1231.peyroscythe.utils.abyssmud.AbyssMudLink;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -23,6 +28,26 @@ public final class AbyssalGraceEffectHooks {
         if (inst != null && inst.getEffect() == MobEffectRegistry.ABYSSAL_GRACE.get()) {
             event.getEntity().getPersistentData().putBoolean(TAG_HAS_GRACE, true);
         }
+    }
+    @SubscribeEvent
+    public static void onClone(PlayerEvent.Clone event) {
+        if (!event.isWasDeath()) return;
+
+        Player oldP = event.getOriginal();
+        Player newP = event.getEntity();
+
+        CompoundTag oldTag = oldP.getPersistentData();
+        CompoundTag newTag = newP.getPersistentData();
+
+        // 拷贝“维度 -> 渊泥UUID”映射
+        if (oldTag.contains(AbyssMudLink.TAG_ABYSS_MUDS, Tag.TAG_COMPOUND)) {
+            newTag.put(AbyssMudLink.TAG_ABYSS_MUDS,
+                    oldTag.getCompound(AbyssMudLink.TAG_ABYSS_MUDS).copy());
+        }
+
+        // 不继承，避免脏状态
+        newTag.remove(AbyssalGraceEffect.TAG_HAS_GRACE);
+        newTag.remove(AbyssalGraceEvent.TAG_PENDING_REV);
     }
 
     // 效果被移除（包括被牛奶、/effect clear、死亡、他模组清空等触发）

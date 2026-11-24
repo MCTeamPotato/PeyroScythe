@@ -40,6 +40,7 @@ public class GregDonutItem extends Item {
             .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300, 0), 0.5F)
             .effect(() -> new MobEffectInstance(MobEffects.WATER_BREATHING, 300, 0), 1.0F)
             .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 300, 1), 1.0F)
+            .effect(() -> new MobEffectInstance(MobEffectRegistry.PEYRO_CHAN.get(), 1200, 0, false, false, false), 1.0F)
             .build();
 
 

@@ -3,20 +3,31 @@ package com.rinko1231.peyroscythe;
 import com.rinko1231.peyroscythe.init.EntityRegistry;
 import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.init.BlockRegistry;
+import com.rinko1231.peyroscythe.init.PeyroParticleRegistry;
+import com.rinko1231.peyroscythe.particle.BlackEmbersParticle;
+import com.rinko1231.peyroscythe.particle.BlackFlameLongParticle;
+import com.rinko1231.peyroscythe.particle.BlackFlameParticle;
 import com.rinko1231.peyroscythe.renderer.*;
+import com.rinko1231.peyroscythe.renderer.eldritch.BlackFireballRenderer;
+import com.rinko1231.peyroscythe.renderer.eldritch.BlackFlameWingsLayer;
+import com.rinko1231.peyroscythe.renderer.eldritch.BlackFlameWingsModel;
 import com.rinko1231.peyroscythe.renderer.holy.*;
 import com.rinko1231.peyroscythe.renderer.ice.GlacierIceBlockRenderer;
-import com.rinko1231.peyroscythe.renderer.ice.IceTombModel;
-import com.rinko1231.peyroscythe.renderer.ice.IceTombRenderer;
+
 import com.rinko1231.peyroscythe.renderer.ice.IcyCometRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.BlazeRenderer;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -33,7 +44,7 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.GOLDEN_BELL.get(), GoldenBellRenderer::new);
         //event.registerEntityRenderer(EntityRegistry.MUNDUS.get(), MundusRenderer::new);
         event.registerEntityRenderer(EntityRegistry.ICY_COMET.get(), (context) -> new IcyCometRenderer(context, 1.5F));
-        event.registerEntityRenderer(EntityRegistry.ICE_TOMB.get(), IceTombRenderer::new);
+        //event.registerEntityRenderer(EntityRegistry.ICE_TOMB.get(), IceTombRenderer::new);
         event.registerEntityRenderer(EntityRegistry.FROST_FOG.get(), NoopRenderer::new);
         event.registerEntityRenderer(EntityRegistry.MUNDUS.get(), MundusRenderer::new);
         event.registerEntityRenderer(EntityRegistry.HOLY_LANCE_PROJECTILE.get(), HolyLanceRenderer::new);
@@ -42,6 +53,9 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.NERO_HOLY_RAY_VISUAL_ENTITY.get(), NeroHolyRayRenderer::new);
         event.registerEntityRenderer(EntityRegistry.ABYSS_MUD.get(), NoopRenderer::new);
         event.registerEntityRenderer(EntityRegistry.SUMMONED_BLAZE.get(), BlazeRenderer::new);
+        event.registerEntityRenderer(EntityRegistry.BLACK_FIREBALL.get(), (context) -> new BlackFireballRenderer(context, 1.25F));
+        event.registerEntityRenderer(EntityRegistry.BLACK_FIREBALL_SMALL.get(), (context) -> new BlackFireballRenderer(context, 0.625F));
+
 
         event.registerEntityRenderer(EntityRegistry.MADE_IN_HEAVEN_PROJECTILE.get(), NoopRenderer::new);
         event.registerEntityRenderer(EntityRegistry.MADE_IN_HEAVEN_REAL_PROJECTILE.get(), NoopRenderer::new);
@@ -49,16 +63,39 @@ public class ClientSetup {
     }
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(IceTombModel.LAYER_LOCATION, IceTombModel::createBodyLayer);
+        //event.registerLayerDefinition(IceTombModel.LAYER_LOCATION, IceTombModel::createBodyLayer);
         event.registerLayerDefinition(MundusRenderer.MODEL_LAYER_LOCATION, MundusRenderer::createBodyLayer);
         event.registerLayerDefinition(GoldenBellRenderer.MODEL_LAYER_LOCATION, GoldenBellRenderer::createBodyLayer);
         event.registerLayerDefinition(NeroHolyRayRenderer.MODEL_LAYER_LOCATION, NeroHolyRayRenderer::createBodyLayer);
-
-
+        event.registerLayerDefinition(BlackFlameWingsModel.BLACK_FLAME_WINGS_LAYER, BlackFlameWingsModel::createLayer);
+        event.registerLayerDefinition(BlackFireballRenderer.MODEL_LAYER_LOCATION, BlackFireballRenderer::createBodyLayer);
     }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet((ParticleType)PeyroParticleRegistry.BLACK_EMBERS.get(), BlackEmbersParticle.Provider::new);
+        event.registerSpriteSet((ParticleType)PeyroParticleRegistry.BLACK_FLAME.get(), BlackFlameParticle.Provider::new);
+        event.registerSpriteSet((ParticleType)PeyroParticleRegistry.BLACK_FLAME_LONG.get(), BlackFlameLongParticle.Provider::new);
+    }
+
+
+
     @SubscribeEvent
     public static void registerBER(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BlockRegistry.MUNDUS_BE.get(), MundusBlockRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.AddLayers event) {
+        addLayerToPlayerSkin(event, "default");
+        addLayerToPlayerSkin(event, "slim");
+    }
+
+    public static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName) {
+        EntityRenderer<? extends Player> render = event.getSkin(skinName);
+        if (render instanceof LivingEntityRenderer livingRenderer) {
+            livingRenderer.addLayer(new BlackFlameWingsLayer(livingRenderer));
+        }
     }
 
     @SubscribeEvent

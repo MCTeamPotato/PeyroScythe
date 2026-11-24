@@ -2,6 +2,7 @@ package com.rinko1231.peyroscythe.spell.ice;
 
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
 import com.rinko1231.peyroscythe.spellentity.ice.IceQuakeAoe;
+import com.rinko1231.peyroscythe.utils.MyUtils;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
@@ -103,7 +104,8 @@ public class FrostHellSpell extends AbstractSpell {
     }
 
     public int getRecastCount(int spellLevel, LivingEntity entity) {
-        return spellLevel+2;
+
+        return MyUtils.maxCap(8,spellLevel+2);
     }
 
     @Override

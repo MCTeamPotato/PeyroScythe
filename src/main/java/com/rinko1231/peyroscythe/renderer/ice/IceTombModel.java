@@ -1,6 +1,6 @@
 package com.rinko1231.peyroscythe.renderer.ice;
 
-
+/*
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.rinko1231.peyroscythe.PeyroScythe;
@@ -57,3 +57,4 @@ public class IceTombModel extends EntityModel<IceTombEntity> {
         model.render(poseStack, vc, packedLight, noOverlay);
     }
 }
+*/

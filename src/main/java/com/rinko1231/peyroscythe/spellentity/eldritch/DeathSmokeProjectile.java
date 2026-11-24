@@ -1,10 +1,8 @@
 package com.rinko1231.peyroscythe.spellentity.eldritch;
 
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
-import com.rinko1231.peyroscythe.init.EntityRegistry;
-import com.rinko1231.peyroscythe.init.MobEffectRegistry;
-import com.rinko1231.peyroscythe.init.NewSpellRegistry;
-import com.rinko1231.peyroscythe.init.TagsRegistry;
+import com.rinko1231.peyroscythe.init.*;
+import com.rinko1231.peyroscythe.utils.MyUtils;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.spells.AbstractConeProjectile;
@@ -23,8 +21,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class DeathSmokeProjectile extends AbstractConeProjectile {
 
-    private static final EntityDataAccessor<Integer> SPELL_LEVEL =
-            SynchedEntityData.defineId(DeathSmokeProjectile.class, EntityDataSerializers.INT);
+
 
     public DeathSmokeProjectile(EntityType<? extends AbstractConeProjectile> entityType, Level level) {
         super(entityType, level);
@@ -35,11 +32,8 @@ public class DeathSmokeProjectile extends AbstractConeProjectile {
         this.setOwner(entity);
     }
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SPELL_LEVEL, 1);
-    }
+    private static final EntityDataAccessor<Integer> SPELL_LEVEL =
+            SynchedEntityData.defineId(DeathSmokeProjectile.class, EntityDataSerializers.INT);
 
     public void setSpellLevel(int s) {
         this.entityData.set(SPELL_LEVEL, s);
@@ -60,6 +54,11 @@ public class DeathSmokeProjectile extends AbstractConeProjectile {
         if (tag.contains("SpellLevel")) {
             setSpellLevel(tag.getInt("SpellLevel"));
         }
+    }
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SPELL_LEVEL, 1);
     }
 
 
@@ -85,13 +84,14 @@ public class DeathSmokeProjectile extends AbstractConeProjectile {
                         Math.random() * 2.0 * angularness - angularness)).normalize();
                 Vec3 result = rotation.scale(3.0F).add(randomVec).normalize().scale(speed);
 
-                this.level().addParticle(ParticleTypes.LARGE_SMOKE,
+                this.level().addParticle(PeyroParticleRegistry.BLACK_FLAME_LONG.get(),
                         x + ox, y + oy, z + oz,
                         result.x, result.y, result.z);
 
                 this.level().addParticle(ParticleTypes.SQUID_INK,
                         x + ox, y + oy, z + oz,
                         result.x, result.y, result.z);
+
             }
         }
     }
@@ -103,13 +103,15 @@ public class DeathSmokeProjectile extends AbstractConeProjectile {
         Entity target = hitResult.getEntity();
         if (DamageSources.applyDamage(target, this.damage, ((AbstractSpell) NewSpellRegistry.DEATH_SMOKE_SPELL.get()).getDamageSource(this, this.getOwner())) && target instanceof LivingEntity livingEntity) {
             {
-                if (!target.getType().is(TagsRegistry.DEATH_SMOKE_IMMUNE))//死者之王太捞了，转阶段会被秒
+                if (!target.getType().is(TagsRegistry.DEATH_SMOKE_IMMUNE) && !livingEntity.hasEffect(io.redspace.ironsspellbooks.registries.MobEffectRegistry.ABYSSAL_SHROUD.get())&& !livingEntity.hasEffect(io.redspace.ironsspellbooks.registries.MobEffectRegistry.HEARTSTOP.get()))//死者之王太捞了，转阶段会被秒
                 {
                     // 给目标叠加 deathSmokeMark
                     MobEffectInstance existing = livingEntity.getEffect(MobEffectRegistry.DEATH_SMOKE_EROSION.get());
                     int amp = 0;
+
                     if (existing != null) {
                         amp = existing.getAmplifier() + 1; // 叠加等级
+
                     }
 
                     // 每次命中刷新持续时间
@@ -134,19 +136,9 @@ public class DeathSmokeProjectile extends AbstractConeProjectile {
                         float healthPct = entity.getHealth() / entity.getMaxHealth();
 
                         if (healthPct <= killThreshold) {
-
                             entity.removeAllEffects();//避免庇护
-                            entity.setHealth(0.001F);//防假死
-                            DamageSources.applyDamage(target, entity.getMaxHealth(), NewSpellRegistry.DEATH_SMOKE_SPELL.get().getDamageSource(this, this.getOwner()));
-                           /*
-                           //吞噬逻辑转移到主类里了
-                           if(this.getOwner() instanceof ServerPlayer p)
-                            {
-                                p.heal((float)(PeyroScytheConfig.deathSmokeHealthToHealthTransferRatePerLevel.get() * this.getSpellLevel() * livingEntity.getMaxHealth()));
-                                MagicData magicData = MagicData.getPlayerMagicData(p);
-                                magicData.addMana((float) (PeyroScytheConfig.deathSmokeHealthToManaTransferRatePerLevel.get() * this.getSpellLevel() * livingEntity.getMaxHealth()));
-                                Messages.sendToPlayer(new ClientboundSyncMana(magicData), p);
-                            }*/
+                            if(entity.getHealth()>1F) entity.setHealth(1F); // 防止假死
+                            DamageSources.applyDamage(target, MyUtils.minCap(100, entity.getMaxHealth()), NewSpellRegistry.DEATH_SMOKE_SPELL.get().getDamageSource(this, this.getOwner()));
                         }
                     }
                 }

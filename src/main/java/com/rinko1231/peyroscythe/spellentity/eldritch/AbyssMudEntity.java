@@ -152,6 +152,7 @@ public class AbyssMudEntity extends Projectile implements NoKnockbackProjectile 
                                 ((AbstractSpell) NewSpellRegistry.DEATH_SMOKE_SPELL.get())
                                         .getDamageSource(this, owner)
                         );
+
                     }
                 }
             }
@@ -213,7 +214,8 @@ public class AbyssMudEntity extends Projectile implements NoKnockbackProjectile 
     public void ambientParticles() {
         if (!this.level().isClientSide) return;
         this.ambientParticles(ParticleHelper.VOID_TENTACLE_FOG, 0.6f);
-        this.ambientParticles(ParticleHelper.UNSTABLE_ENDER);
+        this.ambientParticles(ParticleHelper.UNSTABLE_ENDER, 0.8f);
+        this.ambientParticles(ParticleTypes.SCULK_CHARGE_POP,0.8f);
         this.ambientParticles(ParticleTypes.LARGE_SMOKE, 0.6f);
     }
     public void ambientParticles(ParticleOptions particle) { ambientParticles(particle, 1.0f); }

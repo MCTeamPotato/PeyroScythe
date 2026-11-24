@@ -1,7 +1,7 @@
 package com.rinko1231.peyroscythe.init;
 
 import com.rinko1231.peyroscythe.spell.*;
-import com.rinko1231.peyroscythe.spell.eldritch.DeathSmokeSpell;
+import com.rinko1231.peyroscythe.spell.eldritch.*;
 import com.rinko1231.peyroscythe.spell.ender.MadeInHeavenSpell;
 import com.rinko1231.peyroscythe.spell.ender.MadeInHeavenRealSpell;
 import com.rinko1231.peyroscythe.spell.fire.SinfireEmbraceSpell;
@@ -14,7 +14,6 @@ import com.rinko1231.peyroscythe.spell.ice.FrostHellSpell;
 import com.rinko1231.peyroscythe.spell.ice.GlacierSpell;
 import com.rinko1231.peyroscythe.spell.ice.IcyCometRainSpell;
 import com.rinko1231.peyroscythe.spell.ice.TheFrozenWorldSpell;
-import com.rinko1231.peyroscythe.spell.eldritch.ChaosCradleSpell;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraftforge.registries.DeferredRegister;
@@ -49,11 +48,26 @@ public class NewSpellRegistry {
             SPELLS.register("mundus", MundusSpell::new);
     public static final RegistryObject<AbstractSpell> HOLY_LANCE =
             SPELLS.register("holy_lance", HolyLanceSpell::new);
-    public static final RegistryObject<AbstractSpell> RYAN_TEMPEST_EDGE = SPELLS.register("ryan_tempest_edge",RyanTempestEdgeSpell::new);
+    public static final RegistryObject<AbstractSpell> RYAN_TEMPEST_EDGE =
+            SPELLS.register("ryan_tempest_edge",RyanTempestEdgeSpell::new);
     public static final RegistryObject<AbstractSpell> CHAOS_CRADLE =
             SPELLS.register("chaos_cradle", ChaosCradleSpell::new);
     public static final RegistryObject<AbstractSpell> SUMMON_BLAZE =
             SPELLS.register("summon_blaze", SummonBlazeSpell::new);
+
+    public static final RegistryObject<AbstractSpell> ILLUSION_FEAR =
+            SPELLS.register("illusion_fear", IllusionFearSpell::new);
+    public static final RegistryObject<AbstractSpell> ILLUSION_CRAZY =
+            SPELLS.register("illusion_crazy", IllusionCrazySpell::new);
+
+    public static final RegistryObject<AbstractSpell> YOUNG_FOR_YOU =
+            SPELLS.register("young_for_you", YoungForYouSpell::new);
+
+    public static final RegistryObject<AbstractSpell> BLACK_FLAME_WINGS =
+            SPELLS.register("black_flame_wings", BlackFlameWingsSpell::new);
+    public static final RegistryObject<AbstractSpell> BLACK_FIREBALL =
+            SPELLS.register("black_fireball",BlackFireballSpell::new);
+
 
     public static final RegistryObject<AbstractSpell> MADE_IN_HEAVEN =
             SPELLS.register("made_in_heaven", MadeInHeavenSpell::new);

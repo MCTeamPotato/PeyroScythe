@@ -5,7 +5,7 @@ import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.init.NewSpellRegistry;
 import com.rinko1231.peyroscythe.init.TagsRegistry;
 import com.rinko1231.peyroscythe.spellentity.ice.FrostFogEntity;
-import com.rinko1231.peyroscythe.spellentity.ice.IceTombEntity;
+
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
@@ -17,6 +17,7 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.damage.SpellDamageSource;
+import io.redspace.ironsspellbooks.entity.spells.ice_tomb.IceTombEntity;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.minecraft.core.BlockPos;
@@ -40,6 +41,8 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Optional;
+
+import static io.redspace.ironsspellbooks.registries.MobEffectRegistry.CHILLED;
 
 @AutoSpellConfig
 public class TheFrozenWorldSpell extends AbstractSpell {
@@ -144,7 +147,7 @@ public class TheFrozenWorldSpell extends AbstractSpell {
                 t.hurt(damageSource, itsLife * spellLevel * PeyroScytheConfig.frozenWorldMaxHealthDamageRatioPerLevel.get().floatValue());
                 t.setTicksFrozen(Math.min(t.getTicksRequiredToFreeze(), t.getTicksFrozen() + 140)); // 累加式更柔和
                 t.addEffect(new MobEffectInstance(
-                        MobEffectRegistry.FROZEN.get(),
+                        CHILLED.get(),
                         PeyroScytheConfig.frozenWorldFrozenEffectDurationToEntityInInnerCircle.get(),
                         4, false, true, true
                 ));
@@ -154,7 +157,7 @@ public class TheFrozenWorldSpell extends AbstractSpell {
                 t.hurt(damageSource, itsLife * PeyroScytheConfig.frozenWorldMaxHealthDamageRatioPerLevel.get().floatValue());
                 t.setTicksFrozen(Math.min(t.getTicksRequiredToFreeze(), t.getTicksFrozen() + 140)); // 累加式更柔和
                 t.addEffect(new MobEffectInstance(
-                        MobEffectRegistry.FROZEN.get(),
+                                CHILLED.get(),
                         PeyroScytheConfig.frozenWorldFrozenEffectDurationToEntityInInnerCircle.get(),
                         4, false, true, true
                 ));

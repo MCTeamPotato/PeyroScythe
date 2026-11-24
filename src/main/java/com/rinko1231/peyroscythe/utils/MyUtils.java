@@ -23,8 +23,11 @@ import java.util.function.Predicate;
 import static io.redspace.ironsspellbooks.api.util.Utils.checkEntityIntersecting;
 import static io.redspace.ironsspellbooks.damage.DamageSources.applyDamage;
 import static io.redspace.ironsspellbooks.damage.DamageSources.ignoreNextKnockback;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class MyUtils {
+
 
     // 贯穿：按距离从近到远返回命中的所有实体
     public static List<EntityHitResult> raycastAllEntities(Level level,
@@ -78,6 +81,7 @@ public class MyUtils {
         return hits;
     }
 
+
     // 简便重载：不考虑方块（纯穿透），命中所有实体
     public static List<EntityHitResult> raycastAllEntities(Level level,
                                                     Entity originEntity,
@@ -115,6 +119,32 @@ public class MyUtils {
         }
     }
 
+    //我是笨蛋我需要
+    public static int maxCap(int cap, int b)
+    {
+        return min(cap, b);
+    }
+    public static float maxCap(float cap, float b)
+    {
+        return min(cap, b);
+    }
+    public static double maxCap(double cap, double b)
+    {
+        return min(cap, b);
+    }
+    public static int minCap(int cap, int b)
+    {
+        return max(cap, b);
+    }
+    public static float minCap(float cap, float b)
+    {
+        return max(cap, b);
+    }
+    public static double minCap(double cap, double b)
+    {
+        return max(cap, b);
+    }
+
     /**
      * 对目标施加“按秒计”的持续伤害：将 DPS 均摊到当下 tick。
      * 特点：
@@ -135,7 +165,7 @@ public class MyUtils {
 
         // 将 DPS 均摊为“每 tick 伤害”
         float perTick = dps / 20.0f;
-        perTick = Math.max(perTick, 0.001f);
+        perTick = max(perTick, 0.001f);
 
         int prevInvul = target.invulnerableTime;
         if (ignoreHurtResist) {

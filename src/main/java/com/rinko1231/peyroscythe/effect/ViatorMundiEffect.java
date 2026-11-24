@@ -3,6 +3,7 @@ package com.rinko1231.peyroscythe.effect;
 import io.redspace.ironsspellbooks.effect.MagicMobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class ViatorMundiEffect extends MagicMobEffect {
 
@@ -11,7 +12,7 @@ public class ViatorMundiEffect extends MagicMobEffect {
         }
 
         @Override
-        public void applyEffectTick(LivingEntity entity, int amplifier) {
+        public void applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
 
         }
 

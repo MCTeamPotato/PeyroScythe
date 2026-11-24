@@ -4,6 +4,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
+import java.util.List;
+
 public class PeyroScytheConfig {
 
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -89,6 +91,24 @@ public class PeyroScytheConfig {
     public static ForgeConfigSpec.BooleanValue summonBlazeAllowLooting;
     public static ForgeConfigSpec.DoubleValue summonBlazeSenatorExtraHealth;
 
+    public static ForgeConfigSpec.BooleanValue illusionFearAllowLooting;
+    public static ForgeConfigSpec.BooleanValue illusionCrazyAllowLooting;
+    public static ForgeConfigSpec.DoubleValue illusionCrazySearchRadius;
+
+    public static ForgeConfigSpec.BooleanValue youngForYouAllowLooting;
+
+    public static ForgeConfigSpec.BooleanValue blackFlameWingsAllowLooting;
+    public static ForgeConfigSpec.DoubleValue blackFlameWingsEldritchPowerBoostRatio;
+    public static ForgeConfigSpec.DoubleValue blackFlameWingsSpellResistBoostRatio;
+    public static ForgeConfigSpec.DoubleValue blackFlameWingsArmorToughnessBoostRatio;
+    public static ForgeConfigSpec.DoubleValue blackFlameWingsMovementSpeedBoostRatio;
+
+    public static ForgeConfigSpec.BooleanValue blackFireballAllowLooting;
+
+    public static ForgeConfigSpec.ConfigValue<java.util.List<? extends Integer>> madeInHeavenAccelFactors;
+    public static ForgeConfigSpec.ConfigValue<java.util.List<? extends Integer>> madeInHeavenRealAccelFactors;
+
+
     public static ForgeConfigSpec.DoubleValue iceJudgementATK;
     public static ForgeConfigSpec.DoubleValue iceJudgementSPD;
     public static ForgeConfigSpec.DoubleValue captainGregScytheATK;
@@ -100,6 +120,9 @@ public class PeyroScytheConfig {
     public static ForgeConfigSpec.BooleanValue entityDropWintermoonHeart;
     public static ForgeConfigSpec.DoubleValue entityDropCuriosItemPossibility;
     public static ForgeConfigSpec.DoubleValue entityDropDonutPossibility;
+
+    public static ForgeConfigSpec.BooleanValue abyssAngerPriest;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> spellsPriestDontLike;
 
     static {
 
@@ -144,13 +167,13 @@ public class PeyroScytheConfig {
                 .define("deathSmokeAllowLooting",true);
         deathSmokeBasicKillThreshold = BUILDER
                 .comment("Basic health percentage threshold to instantly kill")
-                .defineInRange("deathSmokeBasicKillThreshold", 0.05 ,0, 1);
+                .defineInRange("deathSmokeBasicKillThreshold", 0.04 ,0, 1);
         deathSmokeKillThresholdGrowthPerLevel = BUILDER
                 .comment("Kill threshold growth per spell level")
-                .defineInRange("deathSmokeKillThresholdGrowthPerLevel", 0.01F ,0, 1);
+                .defineInRange("deathSmokeKillThresholdGrowthPerLevel", 0.008F ,0, 1);
         deathSmokeErosionDuration = BUILDER
                 .comment("Duration of erosion effect in ticks")
-                .defineInRange("deathSmokeErosionDuration", 80 ,1, Integer.MAX_VALUE);
+                .defineInRange("deathSmokeErosionDuration", 160 ,1, Integer.MAX_VALUE);
 
         deathSmokeHealthToHealthTransferRatePerLevel = BUILDER
                 .comment("Health to health transfer rate per level")
@@ -385,6 +408,77 @@ public class PeyroScytheConfig {
 
         BUILDER.pop();
 
+        BUILDER.push("The Abyss of Illusion Spell");
+
+        illusionFearAllowLooting = BUILDER
+                .comment("Whether Illusion: Be Fear can be obtained from loot chests")
+                .define("illusionFearAllowLooting",true);
+
+        illusionCrazyAllowLooting = BUILDER
+                .comment("Whether Illusion: Be Crazy can be obtained from loot chests")
+                .define("illusionCrazyAllowLooting",true);
+
+        illusionCrazySearchRadius = BUILDER
+                .defineInRange("illusionCrazySearchRadius", 8.0D ,1.0D, 128);
+
+        BUILDER.pop();
+
+        BUILDER.push("Young For You Spell");
+
+        youngForYouAllowLooting = BUILDER
+                .comment("Whether Young For You can be obtained from loot chests")
+                .define("youngForYouAllowLooting",true);
+
+        BUILDER.pop();
+
+        BUILDER.push("Black Flame Wings (Fake) Spell");
+
+        blackFlameWingsAllowLooting = BUILDER
+                .comment("Whether Black Flame Wings (Fake) can be obtained from loot chests")
+                .define("blackFlameWingsAllowLooting",true);
+        /*
+        blackFlameWingsEldritchPowerBoostRatio = BUILDER
+                .comment("Eldritch Spell Power boost ratio of Black Flame Wings Effect")
+                .defineInRange("blackFlameWingsEldritchPowerBoostRatio", 0.15F ,-1, Integer.MAX_VALUE);
+        blackFlameWingsSpellResistBoostRatio = BUILDER
+                .comment("Spell Resist boost ratio of Black Flame Wings Effect")
+                .defineInRange("blackFlameWingsSpellResistBoostRatio", 0.15F ,-1, Integer.MAX_VALUE);
+        blackFlameWingsArmorToughnessBoostRatio = BUILDER
+                .comment("Armor Toughness boost ratio of Black Flame Wings Effect")
+                .defineInRange("blackFlameWingsArmorToughnessBoostRatio", 0.3F ,-1, Integer.MAX_VALUE);
+        blackFlameWingsMovementSpeedBoostRatio = BUILDER
+                .comment("Movement Speed boost ratio of Black Flame Wings Effect")
+                .defineInRange("blackFlameWingsMovementSpeedBoostRatio", 0.3F ,-1, Integer.MAX_VALUE);
+*/
+        BUILDER.pop();
+
+        BUILDER.push("Black Fireball/ Fireball of Chaos Spell");
+
+        blackFireballAllowLooting = BUILDER
+                .comment("Whether Black Fireball/ Fireball of Chaos can be obtained from loot chests")
+                .define("blackFireballAllowLooting",true);
+
+
+        BUILDER.pop();
+
+        BUILDER.push("Made In Heaven Spell");
+
+        madeInHeavenAccelFactors = BUILDER
+                .comment("Time acceleration factors per spell level. Example: [1, 20, 40, 120]")
+                .comment("Note: the first '1' is a base value (no acceleration) and will not be applied.")
+                .defineList("timeAccelFactors",
+                        java.util.List.of(1, 20, 40, 120),
+                        o -> o instanceof Integer i && i > 0); // 校验：必须正整数
+        madeInHeavenRealAccelFactors = BUILDER
+                .comment("Time acceleration factors per spell level. Example: [1, 20, 40, 120]")
+                .comment("Note: the first '1' is a base value (no acceleration) and will not be applied.")
+                .defineList("timeAccelFactorsReal",
+                        java.util.List.of(1, 20, 40, 120),
+                        o -> o instanceof Integer i && i > 0); // 校验：必须正整数
+
+
+        BUILDER.pop();
+
         BUILDER.push("Weapons");
 
        iceJudgementATK = BUILDER
@@ -420,6 +514,20 @@ public class PeyroScytheConfig {
         entityDropDonutPossibility = BUILDER
                 .comment("Chance of dropping Captain Greg Donut with certain Weapons")
                 .defineInRange("entityDropDonutPossibility", 0.01F ,0, 1);
+
+
+        BUILDER.pop();
+
+        BUILDER.push("Abyss and Priest");
+
+        abyssAngerPriest = BUILDER
+                .comment("Whether certain spells (like Abyssal/Eldritch spells from this mod) anger Priests")
+                .define("abyssAngerPriest",false);
+
+        spellsPriestDontLike = BUILDER
+                .comment("Spells that will anger Priests")
+                .defineList("spellsPriestDontLike", List.of("peyroscythe:death_smoke", "peyroscythe:black_flame_wings", "peyroscythe:black_fireball", "peyroscythe:chaos_cradle"),
+                        element -> element instanceof String);
 
 
         SPEC = BUILDER.build();

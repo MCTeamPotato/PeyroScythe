@@ -3,28 +3,20 @@ package com.rinko1231.peyroscythe.spellentity;
 
 
 import com.rinko1231.peyroscythe.init.EntityRegistry;
-import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.init.NewSpellRegistry;
-import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
-import io.redspace.ironsspellbooks.damage.DamageSources;
-import io.redspace.ironsspellbooks.effect.SummonTimer;
-import io.redspace.ironsspellbooks.entity.mobs.MagicSummon;
+import io.redspace.ironsspellbooks.capabilities.magic.SummonManager;
+import io.redspace.ironsspellbooks.entity.mobs.IMagicSummon;
 import io.redspace.ironsspellbooks.entity.mobs.goals.*;
 import io.redspace.ironsspellbooks.entity.spells.firebolt.FireboltProjectile;
-import io.redspace.ironsspellbooks.spells.fire.FireboltSpell;
-import io.redspace.ironsspellbooks.util.OwnerHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -33,27 +25,18 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.UUID;
 
-public class SummonedBlaze extends Blaze implements MagicSummon {
+public class SummonedBlaze extends Blaze implements IMagicSummon {
 
-    // —— 自己管理的“充能”外观标志（驱动燃烧特效）——
     private static final EntityDataAccessor<Boolean> SUMMONED_CHARGED =
             SynchedEntityData.defineId(SummonedBlaze.class, EntityDataSerializers.BOOLEAN);
-
-    // —— 召唤者 —— //
-    protected LivingEntity cachedSummoner;
-    protected UUID         summonerUUID;
 
     public SummonedBlaze(EntityType<? extends Blaze> type, Level level) {
         super(type, level);
@@ -145,30 +128,29 @@ public class SummonedBlaze extends Blaze implements MagicSummon {
         // .add(Attributes.MAX_HEALTH, 20.0D); // 若想自定义血量，就加上
     }
 
-    // —— 召唤者存取 —— //
-    @Nullable
-    public LivingEntity getSummoner() {
-        return OwnerHelper.getAndCacheOwner(this.level(), this.cachedSummoner, this.summonerUUID);
-    }
 
-    public void setSummoner(@Nullable LivingEntity owner) {
+
+    /** @deprecated */
+    @Deprecated(
+            forRemoval = true
+    )
+    public void setSummoner(@javax.annotation.Nullable LivingEntity owner) {
         if (owner != null) {
-            this.summonerUUID  = owner.getUUID();
-            this.cachedSummoner = owner;
+            SummonManager.setOwner(this, owner);
         }
     }
 
-    // —— 生命周期钩子（与 SummonedVex 一致）—— //
-    @Override
-    public void die(@NotNull DamageSource source) {
+    public void die(DamageSource pDamageSource) {
         this.onDeathHelper();
-        super.die(source);
+        super.die(pDamageSource);
     }
 
-    @Override
     public void onRemovedFromWorld() {
-        this.onRemovedHelper(this, (SummonTimer) MobEffectRegistry.SUMMON_BLAZE_TIMER.get());
+        this.onRemovedHelper(this);
         super.onRemovedFromWorld();
+    }
+    public void remove(Entity.RemovalReason pReason) {
+        super.remove(pReason);
     }
 
     @Override
@@ -176,7 +158,7 @@ public class SummonedBlaze extends Blaze implements MagicSummon {
         if (!this.level().isClientSide) {
             MagicManager.spawnParticles(this.level(), net.minecraft.core.particles.ParticleTypes.POOF,
                     this.getX(), this.getY(), this.getZ(), 25, 0.4, 0.8, 0.4, 0.03, false);
-            this.discard();
+            this.setRemoved(RemovalReason.DISCARDED);
         }
     }
 
@@ -194,14 +176,14 @@ public class SummonedBlaze extends Blaze implements MagicSummon {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        OwnerHelper.serializeOwner(tag, this.summonerUUID);
+        //OwnerHelper.serializeOwner(tag, this.summonerUUID);
         tag.putBoolean("SummonedCharged", this.isChargedSummoned());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.summonerUUID = OwnerHelper.deserializeOwner(tag);
+        //this.summonerUUID = OwnerHelper.deserializeOwner(tag);
         if (tag.contains("SummonedCharged")) {
             this.setChargedSummoned(tag.getBoolean("SummonedCharged"));
         }
@@ -302,7 +284,7 @@ public class SummonedBlaze extends Blaze implements MagicSummon {
                         bolt.shoot(dir);
                         bolt.setOwner(blaze.getSummoner());
 
-                        bolt.setDamage(0.8f * SpellRegistry.FIREBOLT_SPELL.get().getDamageSource(blaze.getSummoner()).spell().getSpellPower(1, blaze.getSummoner()));
+                        bolt.setDamage(0.66f * SpellRegistry.FIREBOLT_SPELL.get().getDamageSource(blaze.getSummoner()).spell().getSpellPower(1, blaze.getSummoner()));
 
                         blaze.level().addFreshEntity(bolt);
                     }

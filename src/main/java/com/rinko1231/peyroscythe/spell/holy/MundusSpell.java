@@ -9,6 +9,7 @@ import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.*;
 import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 import io.redspace.ironsspellbooks.api.util.Utils;
+import io.redspace.ironsspellbooks.config.ServerConfigs;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -65,7 +66,11 @@ public class MundusSpell extends AbstractSpell {
 
     @Override
     public boolean allowLooting() {
-        return PeyroScytheConfig.mundusAllowLooting.get();
+        return false; //暂时ban了
+        //return PeyroScytheConfig.mundusAllowLooting.get();
+    }
+    public boolean isEnabled() {
+        return false;
     }
 
     public ResourceLocation getSpellResource() {
@@ -79,6 +84,7 @@ public class MundusSpell extends AbstractSpell {
     public Optional<SoundEvent> getCastFinishSound() {
         return Optional.of((SoundEvent)SoundRegistry.BLACK_HOLE_CAST.get());
     }
+
 
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
         float radius = this.getRadius(spellLevel, entity);

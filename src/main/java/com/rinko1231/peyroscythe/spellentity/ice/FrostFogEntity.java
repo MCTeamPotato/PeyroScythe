@@ -3,6 +3,7 @@ package com.rinko1231.peyroscythe.spellentity.ice;
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
 import com.rinko1231.peyroscythe.init.EntityRegistry;
 import com.rinko1231.peyroscythe.init.MobEffectRegistry;
+import com.rinko1231.peyroscythe.init.PeyroParticleRegistry;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.spells.AoeEntity;
@@ -46,7 +47,8 @@ public class FrostFogEntity extends AoeEntity {
         DamageSources.ignoreNextKnockback(target);
 
         target.setTicksFrozen(Math.min(target.getTicksFrozen() + 8, target.getTicksRequiredToFreeze() * 3));
-        target.addEffect(new MobEffectInstance(MobEffectRegistry.FROZEN.get(), 40, 1, false, true, true));
+        //铁魔法新冻结
+        //target.addEffect(new MobEffectInstance(MobEffectRegistry.FROZEN.get(), 40, 1, false, true, true));
 
     }
 
@@ -56,7 +58,8 @@ public class FrostFogEntity extends AoeEntity {
         DamageSources.ignoreNextKnockback(target);
 
         target.setTicksFrozen(Math.min(target.getTicksFrozen() + 9, target.getTicksRequiredToFreeze() * 3));
-        target.addEffect(new MobEffectInstance(MobEffectRegistry.FROZEN.get(), 40, 4, false, true, true));
+        //铁魔法新冻结
+        //target.addEffect(new MobEffectInstance(MobEffectRegistry.FROZEN.get(), 40, 4, false, true, true));
 
     }
 
@@ -119,6 +122,7 @@ public class FrostFogEntity extends AoeEntity {
         if (this.level().isClientSide) {
             this.ambientParticles(ParticleHelper.SNOWFLAKE);
             this.ambientParticles(ParticleHelper.SNOW_DUST);
+
         }
     }
 

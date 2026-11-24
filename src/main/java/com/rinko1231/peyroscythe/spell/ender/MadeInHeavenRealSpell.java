@@ -1,6 +1,6 @@
 package com.rinko1231.peyroscythe.spell.ender;
 
-import com.rinko1231.peyroscythe.spellentity.ender.MadeInHeavenProjectile;
+import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
 import com.rinko1231.peyroscythe.spellentity.ender.MadeInHeavenRealProjectile;
 import com.rinko1231.peyroscythe.utils.AbstractProjectileReverse;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
@@ -11,7 +11,6 @@ import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.spells.EntityCastData;
-import io.redspace.ironsspellbooks.spells.eldritch.AbstractEldritchSpell;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +27,7 @@ import java.util.Optional;
 import static com.rinko1231.peyroscythe.PeyroScythe.MOD_ID;
 
 @AutoSpellConfig
-public class MadeInHeavenRealSpell extends AbstractEldritchSpell {
+public class MadeInHeavenRealSpell extends AbstractSpell {
     private static final ResourceLocation ID = new ResourceLocation(MOD_ID, "made_in_heaven_real");
     private final DefaultConfig defaultConfig;
 
@@ -80,19 +79,26 @@ public class MadeInHeavenRealSpell extends AbstractEldritchSpell {
     public Optional<SoundEvent> getCastFinishSound() {
         return Optional.empty();
     }
-
+/*
     public int getFactor(int spellLevel) {
         spellLevel = Mth.clamp(spellLevel, 1, 2);
         return LEVEL_TO_FACTOR[spellLevel];
-    }
-    // —— 你可以把这个倍率表挪到 config —— //
+    }*/
+public int getFactor(int spellLevel) {
+    var list = PeyroScytheConfig.madeInHeavenRealAccelFactors.get();
+    // 安全取值：等级超范围就用最后一个
+    if (spellLevel < 0) return list.get(0);
+    if (spellLevel >= list.size()) return list.get(list.size()-1);
+    return list.get(spellLevel);
+}
+
     private static final int[] LEVEL_TO_FACTOR = {1, 20, 40, 120};
 
     public float getSpeedUpRadius(int spellLevel) {
         spellLevel = Mth.clamp(spellLevel, 1, 2);
         return LEVEL_TO_SPEEDUP_RADIUS[spellLevel];
     }
-    // —— 你可以把这个倍率表挪到 config —— //
+
     private static final int[] LEVEL_TO_SPEEDUP_RADIUS = {1, 3, 5};
 
 

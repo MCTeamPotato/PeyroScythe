@@ -31,6 +31,8 @@
   "entity.peyroscythe.tempest_edge": "风刃",
   "entity.peyroscythe.tempest_edge_h": "风刃",
   "entity.peyroscythe.abyss_mud": "渊泥",
+  "entity.peyroscythe.black_fireball": "混沌黑焰",
+  "entity.peyroscythe.black_fireball_small": "小型混沌黑焰",
 
   "entity.peyroscythe.summoned_blaze": "被召唤的烈焰人",
   "entity.peyroscythe.summoned_blaze.custom_name": "真理之门信徒",
@@ -46,6 +48,11 @@
   "effect.peyroscythe.flashbanged": "炫目白光",
   "effect.peyroscythe.abyssal_grace": "深渊赐福",
   "effect.peyroscythe.summon_blaze_timer": "已召唤：烈焰人",
+  "effect.peyroscythe.illusion_fear": "幻灭：恐惧",
+  "effect.peyroscythe.illusion_crazy": "幻灭：疯狂",
+  "effect.peyroscythe.forever_young": "青春永驻",
+  "effect.peyroscythe.peyro_chan": "我是佩佩！",
+  "effect.peyroscythe.black_flame_wings": "伪·黑焰之翼",
 
   "spell.peyroscythe.frost_hell": "寒霜地狱",
   "spell.peyroscythe.glacier": "冰山坠落",
@@ -63,6 +70,11 @@
   "spell.peyroscythe.summon_blaze": "\"真理之门的派对\"",
   "spell.peyroscythe.made_in_heaven": "天堂制造",
   "spell.peyroscythe.made_in_heaven_real": "天堂制造（真）",
+  "spell.peyroscythe.illusion_fear": "幻灭：恐惧",
+  "spell.peyroscythe.illusion_crazy": "幻灭：疯狂",
+  "spell.peyroscythe.young_for_you": "Young For You",
+  "spell.peyroscythe.black_flame_wings": "伪·黑焰之翼",
+  "spell.peyroscythe.black_fireball": "混沌黑焰",
 
   "spell.peyroscythe.crimson_moon.guide": "升起赤月，为范围内所有生物施加月狂效果：提升攻击力、攻击速度和猩红流派法力强度，并在造成伤害时为赤月的主人回复生命值。",
   "spell.peyroscythe.sinfire_embrace.guide": "燃起业火焚烧自己，暂时损失护甲并获得高额生命回复，攻击会点燃目标，击杀生物可以延长效果时间，但业火一旦熄灭，效果就会终止。",
@@ -80,6 +92,11 @@
   "spell.peyroscythe.summon_blaze.guide": "召唤真理之门的狂热信徒——好吧，其实是烈焰人——协助你作战。有约20%概率召唤出有着更高血量的“议员”。",
   "spell.peyroscythe.made_in_heaven.guide": "加速昼夜循环。",
   "spell.peyroscythe.made_in_heaven_real.guide": "加速昼夜循环……和周围的方块。",
+  "spell.peyroscythe.illusion_fear.guide": "运用幻灭深渊的力量，使目标陷入恐惧，逃离施法者。无法与幻灭：疯狂一起生效。对一些生物无效。",
+  "spell.peyroscythe.illusion_crazy.guide": "运用幻灭深渊的力量，使目标陷入疯狂，开始攻击附近的非施法者友方单位。无法与幻灭：恐惧一起生效。对一些生物无效。",
+  "spell.peyroscythe.young_for_you.guide": "以丰饶母神之力，将目标生物转化为幼年形态，如果法术等级大于等于2，目标将不再成长。",
+  "spell.peyroscythe.black_flame_wings.guide": "将混沌之火凝结成黑焰之翼，持续损失法力值，获得邪术法术强度、法术抗性、护甲韧性和移动速度加成，并在接触敌人时对其造成死烟伤害。——然而，那羽翼只是对白夜深渊的模仿，因此无法真正地自由飞翔。",
+  "spell.peyroscythe.black_fireball.guide": "将混沌之火投掷出去，在爆炸时还会分裂。混沌之火会对敌人造成少许基于最大生命值的伤害，并附加死烟侵蚀效果。——在那黑焰之中有一抹白光，或许那正是“白夜深渊”这个称呼的由来。",
 
   "death.attack.peyroscythe.frost_hell": "%1$s被%2$s打成了冰沙。",
   "death.attack.peyroscythe.frost_hell.item": "%1$s被%2$s用%3$s打成了冰沙。",
@@ -95,9 +112,13 @@
   "death.attack.peyroscythe.nero_holy_ray.item": "%2$s拿着%3$s用圣光把邪恶的%1$s击穿了。",
   "death.attack.peyroscythe.holy_lance": "%2$s的圣枪把%1$s串成了芒果冰棍。",
   "death.attack.peyroscythe.holy_lance.item": "%2$s用%3$s发射的圣枪把%1$s串成了芒果冰棍。",
+  "death.attack.peyroscythe.black_fireball": "%1$s被%2$s的混沌之火烧得外焦里嫩。",
+  "death.attack.peyroscythe.black_fireball.item": "%1$s被%2$s用%3$s引来的混沌之火烧得外焦里嫩。",
+
   "death.attack.peyroscythe.ryan_tempest_edge": "%2$s把%1$s切成了生鱼片。",
   "death.attack.peyroscythe.ryan_tempest_edge.item": "%2$s用%3$s把%1$s切成了生鱼片。",
-  "death.attack.peyroscythe.summon_blaze": "%1$s被%2$s做成了BBQ。",
+
+  "death.attack.peyroscythe.summon_blaze": "%1$s充分感受到了%2$s的“热情”。",
 
   "ui.peyroscythe.health_regen": "每秒最大生命值回复",
   "ui.peyroscythe.senator_possibility": "议员召唤率：%d%%",
@@ -109,5 +130,6 @@
   "message.peyroscythe.mundus.failed.empty": "“世界”没有回应，这个维度似乎不存在此类结构。",
   "message.peyroscythe.mundus.failed.not_found": "“世界”没有回应，似乎没有在检索范围内找到此类结构。",
   "message.peyroscythe.mundus.success": "“世界”已经将你传送……",
-  "message.peyroscythe.abyssal_grace_revive": "你受到了致命伤，但吸收了渊泥而复活了。"
+  "message.peyroscythe.abyssal_grace_revive": "你受到了致命伤，但吸收了渊泥而复活了。",
+  "message.peyroscythe.priest_warning": "你使用了一些不太“光明”的力量，附近的牧师不怎么高兴！"
 }

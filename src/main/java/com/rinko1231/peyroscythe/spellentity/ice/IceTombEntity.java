@@ -1,6 +1,6 @@
 package com.rinko1231.peyroscythe.spellentity.ice;
 
-
+/*
 import com.rinko1231.peyroscythe.api.PreventDismountNew;
 import com.rinko1231.peyroscythe.init.EntityRegistry;
 import io.redspace.ironsspellbooks.api.events.SpellHealEvent;
@@ -29,9 +29,7 @@ public class IceTombEntity extends Entity implements PreventDismountNew, AntiMag
     private LivingEntity cachedOwner;
     @Nullable
     private UUID ownerUUID;
-    /**
-     * evil tombs hurt, versus heal
-     */
+
     private boolean evil;
     private float health = 1;
     private int lifetime = -1;
@@ -319,4 +317,4 @@ public class IceTombEntity extends Entity implements PreventDismountNew, AntiMag
         if (this.evil) return false;
         return rider.getUUID().equals(this.ownerUUID);
     }
-}
+}*/

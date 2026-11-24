@@ -10,7 +10,7 @@ import io.redspace.ironsspellbooks.api.spells.*;
 import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
-import io.redspace.ironsspellbooks.spells.eldritch.AbstractEldritchSpell;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @AutoSpellConfig
-public class ChaosCradleSpell extends AbstractEldritchSpell {
+public class ChaosCradleSpell extends AbstractSpell {
     private static final ResourceLocation ID =
             new ResourceLocation("peyroscythe", "chaos_cradle");
 

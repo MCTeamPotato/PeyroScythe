@@ -1,5 +1,5 @@
 package com.rinko1231.peyroscythe.renderer.ice;
-
+/*
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -56,3 +56,4 @@ public class IceTombRenderer extends EntityRenderer<IceTombEntity> {
         return VANILLA_ICE;
     }
 }
+*/

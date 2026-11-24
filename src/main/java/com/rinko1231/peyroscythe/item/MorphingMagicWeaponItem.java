@@ -60,7 +60,8 @@ public class MorphingMagicWeaponItem extends NewMagicSwordItem {
         }
 
         // 替换玩家手上的物品
-        player.setItemInHand(player.getUsedItemHand(), newStack);
+        if(player.getItemInHand(player.getUsedItemHand()).equals(stack))
+            player.setItemInHand(player.getUsedItemHand(), newStack);
     }
 
     /**

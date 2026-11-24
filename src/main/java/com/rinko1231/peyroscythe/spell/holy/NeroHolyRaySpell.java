@@ -2,7 +2,7 @@ package com.rinko1231.peyroscythe.spell.holy;
 
 import com.rinko1231.peyroscythe.PeyroScythe;
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
-import com.rinko1231.peyroscythe.init.MyMessages;
+import com.rinko1231.peyroscythe.init.PeyroMessages;
 import com.rinko1231.peyroscythe.network.spell.ClientboundBloodSiphonReverseParticles;
 import com.rinko1231.peyroscythe.spellentity.holy.NeroHolyRayVisualEntity;
 import com.rinko1231.peyroscythe.utils.MyUtils;
@@ -95,11 +95,10 @@ public class NeroHolyRaySpell extends AbstractSpell {
 
         // 对路径上所有实体逐个处理
         for (EntityHitResult ehr : allHits) {
-            // 你的命中逻辑……
             if (ehr.getType() == HitResult.Type.ENTITY) {
                 Entity target = ((EntityHitResult) ehr).getEntity();
                 if (target instanceof LivingEntity livingEntity && DamageSources.applyDamage(target, this.getRayDamage(spellLevel, caster, livingEntity) + getExtraDamage(livingEntity,0.05f + 0.03f * spellLevel,0.8f), this.getDamageSource(caster))) {
-                    MyMessages.sendToPlayersTrackingEntity(new ClientboundBloodSiphonReverseParticles(target.position().add((double) 0.0F, (double) (target.getBbHeight() / 2.0F), (double) 0.0F), caster.position().add((double) 0.0F, (double) (caster.getBbHeight() / 2.0F), (double) 0.0F)), caster, true);
+                    PeyroMessages.sendToPlayersTrackingEntity(new ClientboundBloodSiphonReverseParticles(target.position().add((double) 0.0F, (double) (target.getBbHeight() / 2.0F), (double) 0.0F), caster.position().add((double) 0.0F, (double) (caster.getBbHeight() / 2.0F), (double) 0.0F)), caster, true);
                     //Messages.sendToPlayersTrackingEntity(new ClientboundBloodSiphonParticles(target.position().add((double) 0.0F, (double) (target.getBbHeight() / 2.0F), (double) 0.0F), entity.position().add((double) 0.0F, (double) (entity.getBbHeight() / 2.0F), (double) 0.0F)), entity, true);
                 }
             }

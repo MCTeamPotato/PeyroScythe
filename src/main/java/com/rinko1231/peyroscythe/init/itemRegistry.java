@@ -3,6 +3,7 @@ package com.rinko1231.peyroscythe.init;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
+
 import com.rinko1231.peyroscythe.item.MorphingMagicWeaponItem;
 import com.rinko1231.peyroscythe.item.NewExtendedWeaponTier;
 import com.rinko1231.peyroscythe.item.NewMagicSwordItem;
@@ -209,6 +210,7 @@ public class itemRegistry {
     }
     public static final RegistryObject<Item> CAPTAIN_GREG_DONUT = ITEMS.register("captain_greg_donut", () -> new GregDonutItem(new GregDonutItem.Properties().food(GregDonutItem.CAPTAIN_GREG_DONUT).rarity(RARE)));
 
+    //public static final RegistryObject<Item> TEST_ICE_CREAM = ITEMS.register("test_ice_cream", () -> new IceCreamItem(new Item.Properties().food(GregDonutItem.CAPTAIN_GREG_DONUT).rarity(RARE)));
 
 
     private static final Supplier<Item>[] LANCE_REF_PA = new Supplier[]{null};

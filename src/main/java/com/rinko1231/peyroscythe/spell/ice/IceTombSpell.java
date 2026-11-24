@@ -1,6 +1,6 @@
 package com.rinko1231.peyroscythe.spell.ice;
 
-
+/*
 import com.rinko1231.peyroscythe.PeyroScythe;
 import com.rinko1231.peyroscythe.spellentity.ice.IceTombEntity;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
@@ -84,3 +84,4 @@ public class IceTombSpell extends AbstractSpell {
         return SpellAnimations.SELF_CAST_TWO_HANDS;
     }
 }
+*/

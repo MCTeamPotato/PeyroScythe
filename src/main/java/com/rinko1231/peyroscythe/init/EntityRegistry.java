@@ -4,7 +4,9 @@ import com.rinko1231.peyroscythe.PeyroScythe;
 import com.rinko1231.peyroscythe.spellentity.TempestEdgeProjectile;
 import com.rinko1231.peyroscythe.spellentity.*;
 import com.rinko1231.peyroscythe.spellentity.eldritch.AbyssMudEntity;
+import com.rinko1231.peyroscythe.spellentity.eldritch.BlackFireball;
 import com.rinko1231.peyroscythe.spellentity.eldritch.DeathSmokeProjectile;
+import com.rinko1231.peyroscythe.spellentity.eldritch.BlackFireballSmall;
 import com.rinko1231.peyroscythe.spellentity.ender.MadeInHeavenProjectile;
 import com.rinko1231.peyroscythe.spellentity.ender.MadeInHeavenRealProjectile;
 import com.rinko1231.peyroscythe.spellentity.holy.GoldenBellEntity;
@@ -70,11 +72,14 @@ public class EntityRegistry {
                             .sized(1.0F, 1.0F)
                             .clientTrackingRange(64)
                             .build(PeyroScythe.id("icy_comet").toString()));
+    /*
     public static final RegistryObject<EntityType<IceTombEntity>> ICE_TOMB =
             ENTITIES.register("ice_tomb", () -> EntityType.Builder.<IceTombEntity>of(IceTombEntity::new, MobCategory.MISC)
                     .sized(1.0f, 2.2f)
                     .clientTrackingRange(64)
                     .build(PeyroScythe.id("ice_tomb").toString()));
+
+     */
     public static final RegistryObject<EntityType<FrostFogEntity>> FROST_FOG =
             ENTITIES.register("frost_fog", () -> EntityType.Builder.<FrostFogEntity>of(FrostFogEntity::new, MobCategory.MISC)
                     .sized(4.0F, 1.2F)
@@ -126,6 +131,21 @@ public class EntityRegistry {
                             .fireImmune()
                             .clientTrackingRange(8)
                             .build((PeyroScythe.id( "summoned_blaze")).toString()));
+
+    public static final RegistryObject<EntityType<BlackFireball>> BLACK_FIREBALL =
+            ENTITIES.register("black_fireball",
+                    () -> EntityType.Builder.<BlackFireball>of(BlackFireball::new, MobCategory.MISC)
+                            .sized(1.0F, 1.0F)
+                            .clientTrackingRange(8)
+                            .build((PeyroScythe.id("black_fireball")).toString()));
+
+    public static final RegistryObject<EntityType<BlackFireballSmall>>BLACK_FIREBALL_SMALL =
+            ENTITIES.register("black_fireball_small",
+                    () -> EntityType.Builder.<BlackFireballSmall>of(BlackFireballSmall::new, MobCategory.MISC)
+                            .sized(0.5F, 0.5F)
+                            .clientTrackingRange(4)
+                            .build((PeyroScythe.id("black_fireball_small")).toString()));
+
 
     public static final RegistryObject<EntityType<MadeInHeavenProjectile>> MADE_IN_HEAVEN_PROJECTILE =
             ENTITIES.register("made_in_heaven_projectile",

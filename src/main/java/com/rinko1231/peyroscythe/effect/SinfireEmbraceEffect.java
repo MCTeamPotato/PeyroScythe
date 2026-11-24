@@ -29,7 +29,11 @@ public class SinfireEmbraceEffect extends MagicMobEffect {
     public void addAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap attributeMap, int amplifier) {
         super.addAttributeModifiers(entity, attributeMap, amplifier);
         // 护甲降低
-        if (entity.getAttribute(Attributes.ARMOR) != null) {
+        if (entity.getAttribute(Attributes.ARMOR) != null
+        && entity.getAttribute(Attributes.ARMOR).getModifier(ARMOR_DEBUFF_UUID) == null
+        ) {
+            //？！修修！？
+            //entity.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_DEBUFF_UUID);
             Objects.requireNonNull(entity.getAttribute(Attributes.ARMOR)).addTransientModifier(
                     new AttributeModifier(ARMOR_DEBUFF_UUID,
                             "sinfire_embrace_armor_debuff",
@@ -37,7 +41,11 @@ public class SinfireEmbraceEffect extends MagicMobEffect {
                             AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         double fireBonus  = PeyroScytheConfig.sinfireEmbraceEffectFirePowerBoostBasicRatio.get() + PeyroScytheConfig.sinfireEmbraceEffectFirePowerBoostRatioGrowthPerLevel.get() * amplifier;
-        if (entity.getAttribute(AttributeRegistry.FIRE_SPELL_POWER.get()) != null) {
+        if (entity.getAttribute(AttributeRegistry.FIRE_SPELL_POWER.get()) != null
+        && entity.getAttribute(AttributeRegistry.FIRE_SPELL_POWER.get()).getModifier(FIRE_POWER_UUID) == null
+        ) {
+            //？！修修！？
+            //entity.getAttribute(AttributeRegistry.FIRE_SPELL_POWER.get()).removeModifier(FIRE_POWER_UUID);
             Objects.requireNonNull(entity.getAttribute(AttributeRegistry.FIRE_SPELL_POWER.get())).addTransientModifier(
                     new AttributeModifier(FIRE_POWER_UUID, "sinfire_embrace_fire_power_bonus",
                             fireBonus, AttributeModifier.Operation.MULTIPLY_BASE));

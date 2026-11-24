@@ -11,7 +11,7 @@ import io.redspace.ironsspellbooks.damage.SpellDamageSource;
 import io.redspace.ironsspellbooks.entity.spells.AbstractConeProjectile;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.spells.EntityCastData;
-import io.redspace.ironsspellbooks.spells.eldritch.AbstractEldritchSpell;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import static com.rinko1231.peyroscythe.PeyroScythe.MOD_ID;
 
 @AutoSpellConfig
-public class DeathSmokeSpell extends AbstractEldritchSpell {
+public class DeathSmokeSpell extends AbstractSpell {
     private final ResourceLocation spellId = new ResourceLocation(MOD_ID, "death_smoke");
     private final DefaultConfig defaultConfig;
 
@@ -37,12 +37,12 @@ public class DeathSmokeSpell extends AbstractEldritchSpell {
                 .setMinRarity(SpellRarity.LEGENDARY)
                 .setSchoolResource(SchoolRegistry.ELDRITCH_RESOURCE)
                 .setMaxLevel(3)
-                .setCooldownSeconds((double) 20.0F)
+                .setCooldownSeconds((double) 30.0F)
                 .build();
         this.manaCostPerLevel = 9;
         this.baseSpellPower = 1;
         this.spellPowerPerLevel = 1;
-        this.castTime = 100;
+        this.castTime = 120;
         this.baseManaCost = 8;
     }
 
@@ -97,17 +97,10 @@ public class DeathSmokeSpell extends AbstractEldritchSpell {
         playerMagicData.setAdditionalCastData(new EntityCastData(breath));
         super.onCast(world, spellLevel, entity, castSource, playerMagicData);
     }
-    public int getRecastCount(int spellLevel, @Nullable LivingEntity entity) {
-        return 1;
-    }
+    public int getRecastCount(int spellLevel, @Nullable LivingEntity entity) {return 1;}
 
     public float getDamage(int spellLevel, LivingEntity caster) {
         return 1.0F + this.getSpellPower(spellLevel, caster) * 0.75F;
-    }
-
-    @Override
-    public SpellDamageSource getDamageSource(@Nullable Entity projectile, Entity attacker) {
-        return super.getDamageSource(projectile, attacker);
     }
 
     public boolean shouldAIStopCasting(int spellLevel, Mob mob, LivingEntity target) {

@@ -35,6 +35,8 @@
   "entity.peyroscythe.tempest_edge": "Tempest Edge",
   "entity.peyroscythe.tempest_edge_h": "Tempest Edge",
   "entity.peyroscythe.abyss_mud": "Abyssal Mud",
+  "entity.peyroscythe.black_fireball": "Black Fireball of Chaos",
+  "entity.peyroscythe.black_fireball_small": "Small Black Fireball of Chaos",
 
   "effect.peyroscythe.death_smoke_erosion": "Death Smoke Erosion",
   "effect.peyroscythe.moon_frenzy": "Moon Frenzy",
@@ -46,6 +48,11 @@
   "effect.peyroscythe.flashbanged": "Flashbanged",
   "effect.peyroscythe.abyssal_grace": "Abyssal Grace",
   "effect.peyroscythe.summon_blaze_timer": "Summon Blaze Timer",
+  "effect.peyroscythe.illusion_fear": "Illusion: Fear",
+  "effect.peyroscythe.illusion_crazy": "Illusion: Crazy",
+  "effect.peyroscythe.forever_young": "Forever Young",
+  "effect.peyroscythe.peyro_chan": "Peyro Chan!",
+  "effect.peyroscythe.black_flame_wings": "Black Flame Wings (Fake)",
 
   "spell.peyroscythe.frost_hell": "Frost Hell",
   "spell.peyroscythe.glacier": "Glacier Fall",
@@ -63,6 +70,11 @@
   "spell.peyroscythe.summon_blaze": "\"The Gate of Truth Party\"",
   "spell.peyroscythe.made_in_heaven": "Made In Heaven",
   "spell.peyroscythe.made_in_heaven_real": "Made In Heaven (Real)",
+  "spell.peyroscythe.illusion_fear": "Illusion: Be Fear",
+  "spell.peyroscythe.illusion_crazy": "Illusion: Be Crazy",
+  "spell.peyroscythe.young_for_you": "Young For You",
+  "spell.peyroscythe.black_flame_wings": "Black Flame Wings (Fake)",
+  "spell.peyroscythe.black_fireball": "Black Fireball of Chaos",
 
   "spell.peyroscythe.crimson_moon.guide": "Raise the Crimson Moon, applying Moon Frenzy to all creatures within range: increases attack damage, attack speed, and Blood school spell power, and restores the Crimson Moon's owner's health when dealing damage.",
   "spell.peyroscythe.sinfire_embrace.guide": "Ignite yourself with fire, temporarily losing armor but gaining powerful health regeneration. Attacks ignite targets, and killing a creature extends the effect duration — but once the flames are extinguished, the effect ends immediately.",
@@ -80,6 +92,11 @@
   "spell.peyroscythe.summon_blaze.guide": "Summon the fanatical followers of the Gate of Truth (well, actually Blazes) to fight by your side. There is about 20% chance to summon a Senator with greater health.",
   "spell.peyroscythe.made_in_heaven.guide": "Accelerate Daylight Cycle.",
   "spell.peyroscythe.made_in_heaven_real.guide": "Accelerate Daylight Cycle……And blocks nearby.",
+  "spell.peyroscythe.illusion_fear.guide": "Channel the power of Illush, The Abyss of Illusion, to fill the target with fear, forcing it to flee from the caster. Cannot coexist with Disillusion: Crazy. Ineffective against certain creatures.",
+  "spell.peyroscythe.illusion_crazy.guide": "Channel the power of Illush, The Abyss of Illusion, to drive the target into madness, causing it to attack nearby non-caster allies. Cannot coexist with Disillusion: Fear. Ineffective against certain creatures.",
+  "spell.peyroscythe.young_for_you.guide": "Channel the power of The Goddess of Abundance, Transforms the target creature into its baby form. If the spell level is 2 or higher, the target will no longer grow.",
+  "spell.peyroscythe.black_flame_wings.guide": "Condense the chaotic fire into wings of black flame, consuming Mana continually, and gaining additional Eldritch Spell Power, Spell Resist, armor toughness, and movement speed. Approaching enemies inflicts Death Smoke damage. However, this spell is only an imitation of the Abyss of White Night, and thus cannot grant true freedom of flight.",
+  "spell.peyroscythe.black_fireball.guide": "Hurl black chaotic fireball that explodes and splits apart. Black Fire deals minor damage based on the target's maximum health and inflicts the Death Smoke Erosion effect. ——Within the black flames glimmers a trace of white light — perhaps it is from this that the name ‘The Abyss of White Night’ was born.",
 
   "death.attack.peyroscythe.frost_hell": "%1$s was blended into a frozen smoothie by %2$s.",
   "death.attack.peyroscythe.frost_hell.item": "%1$s was blended into a frozen smoothie by %2$s using %3$s.",
@@ -95,8 +112,12 @@
   "death.attack.peyroscythe.nero_holy_ray.item": "%2$s wielded %3$s and smote the wicked %1$s with holy light.",
   "death.attack.peyroscythe.holy_lance": "%1$s was skewered into a mango popsicle by %2$s's holy lance.",
   "death.attack.peyroscythe.holy_lance.item": "%1$s was skewered into a mango popsicle by %2$s's holy lance fired with %3$s.",
+  "death.attack.peyroscythe.black_fireball": "%1$s was scorched inside and out by %2$s's chaotic fire.",
+  "death.attack.peyroscythe.black_fireball.item": "%1$s was scorched inside and out by the chaotic fire conjured through %2$s's %3$s.",
+
   "death.attack.peyroscythe.ryan_tempest_edge": "%2$s sliced %1$s into sashimi.",
   "death.attack.peyroscythe.ryan_tempest_edge.item": "%2$s used %3$s to slice %1$s into sashimi.",
+
   "death.attack.peyroscythe.summon_blaze": "%1$s was turned into BBQ by %2$s.",
 
   "ui.peyroscythe.health_regen": "Max Health Regeneration per Second",
@@ -109,5 +130,6 @@
   "message.peyroscythe.mundus.failed.empty": "The Mundus did not answer. Such a structure seems not to exist in this dimension.",
   "message.peyroscythe.mundus.failed.not_found": "The Mundus did not answer. No such structure could be found within the search range.",
   "message.peyroscythe.mundus.success": "The Mundus has spoken... and carried you away.",
-  "message.peyroscythe.abyssal_grace_revive": "You suffered a fatal wound, but the Abyssal Mud revived you."
+  "message.peyroscythe.abyssal_grace_revive": "You suffered a fatal wound, but the Abyssal Mud revived you.",
+  "message.peyroscythe.priest_warning": "You've dabbled in “dark” powers, and the nearby priests aren't happy about it!"
 }

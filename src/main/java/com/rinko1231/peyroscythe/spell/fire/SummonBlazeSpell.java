@@ -2,7 +2,6 @@ package com.rinko1231.peyroscythe.spell.fire;
 
 import com.rinko1231.peyroscythe.PeyroScythe;
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
-import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.spellentity.SummonedBlaze;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -10,14 +9,15 @@ import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.*;
 import io.redspace.ironsspellbooks.api.util.Utils;
 
+import io.redspace.ironsspellbooks.capabilities.magic.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +29,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -90,57 +91,78 @@ public class SummonBlazeSpell extends AbstractSpell {
         return Optional.of(SoundEvents.EVOKER_CAST_SPELL);
     }
 
+    public float extraHealthBasedOnSpellPower(int spellLevel, LivingEntity caster)
+    {
+        return  0.2f * this.getSpellPower(spellLevel,caster);
+    }
+
+    public int getRecastCount(int spellLevel, @Nullable LivingEntity entity) {
+        return 2;
+    }
+
+    public void onRecastFinished(ServerPlayer serverPlayer, RecastInstance recastInstance, RecastResult recastResult, ICastDataSerializable castDataSerializable) {
+        if (SummonManager.recastFinishedHelper(serverPlayer, recastInstance, recastResult, castDataSerializable)) {
+            super.onRecastFinished(serverPlayer, recastInstance, recastResult, castDataSerializable);
+        }
+    }
+    public ICastDataSerializable getEmptyCastData() {
+        return new SummonedEntitiesCastData();
+    }
     public void onCast(Level world, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
-        int summonTime = 9600;
 
-        for(int i = 0; i < spellLevel; ++i) {
-            SummonedBlaze summonedBlaze = new SummonedBlaze(world, entity);
+        PlayerRecasts recasts = playerMagicData.getPlayerRecasts();
+        if (!recasts.hasRecastForSpell(this)) {
+            SummonedEntitiesCastData summonedEntitiesCastData = new SummonedEntitiesCastData();
+            int summonTime = 9600;
 
-            Random random = new Random();
-            float roll = random.nextFloat();
-            summonedBlaze.setCustomNameVisible(false);
-            if(roll < (float)this.getSenatorPossibility(spellLevel,entity))
-            {
+            for (int i = 0; i < spellLevel; ++i) {
+                SummonedBlaze summonedBlaze = new SummonedBlaze(world, entity);
 
-                AttributeInstance maxHpAttr = summonedBlaze.getAttribute(Attributes.MAX_HEALTH);
-                if (maxHpAttr != null) {
-                    maxHpAttr.setBaseValue(maxHpAttr.getBaseValue() * (1.0D + PeyroScytheConfig.summonBlazeSenatorExtraHealth.get()));
-                    summonedBlaze.setHealth((float) maxHpAttr.getValue());
+                Random random = new Random();
+                float roll = random.nextFloat();
+                summonedBlaze.setCustomNameVisible(false);
+                if (roll < (float) this.getSenatorPossibility(spellLevel, entity)) {
+
+                    AttributeInstance maxHpAttr = summonedBlaze.getAttribute(Attributes.MAX_HEALTH);
+                    if (maxHpAttr != null) {
+                        maxHpAttr.setBaseValue((maxHpAttr.getBaseValue() + extraHealthBasedOnSpellPower(spellLevel, entity)) * (1.0D + PeyroScytheConfig.summonBlazeSenatorExtraHealth.get()));
+                        summonedBlaze.setHealth((float) maxHpAttr.getValue());
+                    }
+                    summonedBlaze.addEffect(new MobEffectInstance(MobEffects.REGENERATION, -1, 2, false, false, true));
+                    summonedBlaze.setCustomName(
+                            Component.translatable("entity.peyroscythe.summoned_blaze.senator.custom_name")
+                                    .withStyle(style -> style.withItalic(false)) // 关斜体
+                    );
+                } else {
+
+                    AttributeInstance maxHpAttr = summonedBlaze.getAttribute(Attributes.MAX_HEALTH);
+                    if (maxHpAttr != null) {
+                        maxHpAttr.setBaseValue(maxHpAttr.getBaseValue() + extraHealthBasedOnSpellPower(spellLevel, entity));
+                        summonedBlaze.setHealth((float) maxHpAttr.getValue());
+                    }
+                    summonedBlaze.setCustomName(
+                            Component.translatable("entity.peyroscythe.summoned_blaze.custom_name")
+                                    .withStyle(style -> style.withItalic(false)) // 关斜体
+                    );
+                    summonedBlaze.addEffect(new MobEffectInstance(MobEffects.REGENERATION, summonTime / 2, 1, false, false, true));
+
                 }
-                summonedBlaze.addEffect(new MobEffectInstance(MobEffects.REGENERATION, -1, 2, false, false, true));
-                summonedBlaze.setCustomName(
-                        Component.translatable("entity.peyroscythe.summoned_blaze.senator.custom_name")
-                                .withStyle(style -> style.withItalic(false)) // 关斜体
-                );
-            }
-            else {
 
-                summonedBlaze.setCustomName(
-                        Component.translatable("entity.peyroscythe.summoned_blaze.custom_name")
-                                .withStyle(style -> style.withItalic(false)) // 关斜体
-                );
-                summonedBlaze.addEffect(new MobEffectInstance(MobEffects.REGENERATION, summonTime/2, 1, false, false, true));
 
+                summonedBlaze.moveTo(entity.getEyePosition().add(new Vec3(Utils.getRandomScaled((double) 2.0F), (double) 1.0F, Utils.getRandomScaled((double) 2.0F))));
+                summonedBlaze.finalizeSpawn((ServerLevel) world, world.getCurrentDifficultyAt(summonedBlaze.getOnPos()), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null, (CompoundTag) null);
+                summonedBlaze.setTarget(null);                // 清除攻击目标
+                summonedBlaze.setLastHurtByMob(null);         // 清除最近伤害来源
+                summonedBlaze.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
+
+                //summonedBlaze.addEffect(new MobEffectInstance((MobEffect) MobEffectRegistry.SUMMON_BLAZE_TIMER.get(), summonTime, 0, false, false, false));
+                world.addFreshEntity(summonedBlaze);
+                SummonManager.initSummon(entity, summonedBlaze, summonTime, summonedEntitiesCastData);
             }
 
-
-            summonedBlaze.moveTo(entity.getEyePosition().add(new Vec3(Utils.getRandomScaled((double)2.0F), (double)1.0F, Utils.getRandomScaled((double)2.0F))));
-            summonedBlaze.finalizeSpawn((ServerLevel)world, world.getCurrentDifficultyAt(summonedBlaze.getOnPos()), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
-
-            summonedBlaze.setTarget(null);                // 清除攻击目标
-            summonedBlaze.setLastHurtByMob(null);         // 清除最近伤害来源
-            summonedBlaze.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
-
-            summonedBlaze.addEffect(new MobEffectInstance((MobEffect) MobEffectRegistry.SUMMON_BLAZE_TIMER.get(), summonTime, 0, false, false, false));
-            world.addFreshEntity(summonedBlaze);
+            RecastInstance recastInstance = new RecastInstance(this.getSpellId(), spellLevel, this.getRecastCount(spellLevel, entity), summonTime, castSource, summonedEntitiesCastData);
+            recasts.addRecast(recastInstance, playerMagicData);
         }
-
-        int effectAmplifier = spellLevel - 1;
-        if (entity.hasEffect((MobEffect)MobEffectRegistry.SUMMON_BLAZE_TIMER.get())) {
-            effectAmplifier += entity.getEffect((MobEffect)MobEffectRegistry.SUMMON_BLAZE_TIMER.get()).getAmplifier() + 1;
-        }
-
-        entity.addEffect(new MobEffectInstance((MobEffect)MobEffectRegistry.SUMMON_BLAZE_TIMER.get(), summonTime, effectAmplifier, false, false, true));
         super.onCast(world, spellLevel, entity, castSource, playerMagicData);
     }
 }

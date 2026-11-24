@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class HolyLanceProjectile extends AbstractMagicProjectile {
     private int maxPierce = 3; // 最大穿透次数
@@ -58,8 +59,8 @@ public class HolyLanceProjectile extends AbstractMagicProjectile {
         return 3.5F;
     }
 
-    public Optional<SoundEvent> getImpactSound() {
-        return Optional.of(SoundEvents.TRIDENT_HIT);
+    public Optional<Supplier<SoundEvent>> getImpactSound() {
+        return Optional.of((Supplier)() -> SoundEvents.TRIDENT_HIT);
     }
 
     @Override
