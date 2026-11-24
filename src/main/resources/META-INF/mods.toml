@@ -14,3 +14,12 @@ Thanks to some Free assets from ssugmi, VerArc Stash, Kyrises!
 The new record "Clair de Lune" in this mod features a piano performance by Laurens Goedhart (2011).
 The audio file is hosted on Wikimedia Commons CC BY 3.0 license.
 '''
+
+# Caelus is bundled inside this jar via JarJar; players do not need to install it.
+# If Caelus is installed separately, Forge uses the installed version instead of the bundled one.
+[[dependencies.peyroscythe]]
+    modId="caelus"
+    mandatory=true
+    versionRange="[3.1.0,4.0)"
+    ordering="AFTER"
+    side="BOTH"

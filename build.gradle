@@ -18,6 +18,11 @@ plugins {
 
 apply plugin: 'org.spongepowered.mixin'
 
+// Bundle Caelus into this jar so players do not need to install it separately.
+// If a player already has Caelus installed, Forge's JarJar selector skips the nested copy
+// and uses the installed one instead (no duplicate-mod crash).
+jarJar.enable()
+
 version = mod_version
 group = mod_group_id
 
@@ -138,6 +143,9 @@ repositories {
     maven { url 'https://maven.blamejared.com/' }
     maven { url "https://www.cursemaven.com" }
 
+    // Caelus official maven (bundled into this jar via JarJar)
+    maven { url = 'https://maven.theillusivec4.top' }
+
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
     // flatDir {
@@ -166,10 +174,18 @@ dependencies {
     //implementation fg.deobf("curse.maven:blue-skies-312918:5010316")
     //implementation fg.deobf("curse.maven:structure-gel-api-378802:5278429")
     runtimeOnly fg.deobf("curse.maven:playeranimator-658587:4587214")
-    implementation fg.deobf("curse.maven:geckolib-388172:6027567")
-    implementation fg.deobf("curse.maven:caelus-308989:5281700")
-    implementation fg.deobf("curse.maven:irons-spells-n-spellbooks-855414:7907340")
-    implementation fg.deobf("curse.maven:irons-lib-1492763:7907335")
+    // Caelus: compile against the API, use the full mod in dev, and bundle it into the built jar.
+    // Players do not need to install Caelus; if they do, Forge prefers their installed copy.
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${caelus_version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${caelus_version}")
+    jarJar("top.theillusivec4.caelus:caelus-forge:[3.1.0,4.0)") {
+        jarJar.pin(it, caelus_version)
+    }
+
+    implementation fg.deobf("curse.maven:irons-spells-n-spellbooks-855414:9702213")
+    implementation fg.deobf("curse.maven:geckolib-388172:8285794")
+    implementation fg.deobf("curse.maven:irons-lib-1492763:9687937")
+
     //implementation fg.deobf("curse.maven:irons-spells-n-spellbooks-855414:6833927")
     //implementation fg.deobf("curse.maven:tinkers-construct-74072:6777068")
     runtimeOnly fg.deobf("curse.maven:mantle-74924:6819217")
@@ -265,4 +281,9 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+// Make `gradlew build` also produce the jar-in-jar ("-all") artifact that ships Caelus.
+tasks.named('build') {
+    dependsOn 'jarJar'
 }
