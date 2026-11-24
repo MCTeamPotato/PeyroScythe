@@ -177,7 +177,7 @@ public class BlackFireball extends AbstractMagicProjectile {
             }
 
             if ((Boolean) ServerConfigs.SPELL_GREIFING.get()) {
-                Explosion explosion = new Explosion(this.level(), (Entity)null, ((AbstractSpell) NewSpellRegistry.BLACK_FIREBALL).getDamageSource(this, this.getOwner()), (ExplosionDamageCalculator)null, this.getX(), this.getY(), this.getZ(), this.getExplosionRadius() / 2.0F, true, Explosion.BlockInteraction.DESTROY, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE);
+                Explosion explosion = new Explosion(this.level(), (Entity)null, ((AbstractSpell) NewSpellRegistry.BLACK_FIREBALL.get()).getDamageSource(this, this.getOwner()), (ExplosionDamageCalculator)null, this.getX(), this.getY(), this.getZ(), this.getExplosionRadius() / 2.0F, true, Explosion.BlockInteraction.DESTROY, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE);
                 if (!((ExplosionEvent.Start) NeoForge.EVENT_BUS.post(new ExplosionEvent.Start(this.level(), explosion))).isCanceled()) {
                     explosion.explode();
                     explosion.finalizeExplosion(false);

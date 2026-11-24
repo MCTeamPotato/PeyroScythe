@@ -1,10 +1,10 @@
 package com.rinko1231.peyroscythe.config;
 
 
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
+
 
 public class PeyroScytheConfig {
 
@@ -116,6 +116,9 @@ public class PeyroScytheConfig {
     public static ModConfigSpec.BooleanValue entityDropWintermoonHeart;
     public static ModConfigSpec.DoubleValue entityDropCuriosItemPossibility;
     public static ModConfigSpec.DoubleValue entityDropDonutPossibility;
+
+    public static ModConfigSpec.ConfigValue<java.util.List<? extends Integer>> madeInHeavenAccelFactors;
+    public static ModConfigSpec.ConfigValue<java.util.List<? extends Integer>> madeInHeavenAccelRealFactors;
 
     public static ModConfigSpec.BooleanValue abyssAngerPriest;
     public static ModConfigSpec.ConfigValue<List<? extends String>> spellsPriestDontLike;
@@ -474,7 +477,23 @@ public class PeyroScytheConfig {
        captainGregLanceSPD = BUILDER
                 .defineInRange("captainGregLanceSPD", -1.33F ,-10, 0);
 
+        BUILDER.pop();
 
+        BUILDER.push("Made In Heaven Spell");
+
+        madeInHeavenAccelFactors = BUILDER
+                .comment("Time acceleration factors per spell level. Example: [1, 20, 40, 120]")
+                .comment("Note: the first '1' is a base value (no acceleration) and will not be applied.")
+                .defineList("timeAccelFactors",
+                        java.util.List.of(1, 20, 40, 120),
+                        o -> o instanceof Integer i && i > 0); // 校验：必须正整数
+
+        madeInHeavenAccelRealFactors = BUILDER
+                .comment("Time acceleration factors per spell level. Example: [1, 20, 40, 120]")
+                .comment("Note: the first '1' is a base value (no acceleration) and will not be applied.")
+                .defineList("timeAccelFactorsReal",
+                        java.util.List.of(1, 20, 40, 120),
+                        o -> o instanceof Integer i && i > 0); // 校验：必须正整数
 
         BUILDER.pop();
 

@@ -1,5 +1,6 @@
 package com.rinko1231.peyroscythe.spellentity.ender;
 
+import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
 import com.rinko1231.peyroscythe.init.EntityRegistry;
 import com.rinko1231.peyroscythe.utils.AbstractProjectileReverse;
 import com.rinko1231.peyroscythe.utils.TimeFlowAccelerator;
@@ -63,12 +64,18 @@ public class MadeInHeavenProjectile extends AbstractProjectileReverse {
     public void spawnParticles() {
 
     }
-
-    public int getFactor(int spellLevel) {
+    public static int getFactor(int spellLevel) {
+        var list = PeyroScytheConfig.madeInHeavenAccelFactors.get();
+        // 安全取值：等级超范围就用最后一个
+        if (spellLevel < 0) return list.getFirst();
+        if (spellLevel >= list.size()) return list.getLast();
+        return list.get(spellLevel);
+    }
+  /*  public int getFactor(int spellLevel) {
         spellLevel = Mth.clamp(spellLevel, 1, 3);
         return LEVEL_TO_FACTOR[spellLevel];
-    }
-    // —— 你可以把这个倍率表挪到 config —— //
+    }*/
+
     private static final int[] LEVEL_TO_FACTOR = {1, 20, 40, 120};
 
     public void tick() {

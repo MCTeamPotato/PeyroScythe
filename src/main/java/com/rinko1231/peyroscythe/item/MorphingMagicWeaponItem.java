@@ -28,9 +28,6 @@ public class MorphingMagicWeaponItem extends MagicSwordItem {
     }
 
 
-    /**
-     * 变形成另一形态
-     */
     public void morph(ItemStack stack, Player player) {
         if (morphTarget == null || morphTarget.get() == null) return;
 
@@ -68,7 +65,8 @@ public class MorphingMagicWeaponItem extends MagicSwordItem {
         }
 
         // 替换玩家手上的物品
-        player.setItemInHand(player.getUsedItemHand(), newStack);
+        if(player.getItemInHand(player.getUsedItemHand()).equals(stack))
+            player.setItemInHand(player.getUsedItemHand(), newStack);
     }
 
     /**
