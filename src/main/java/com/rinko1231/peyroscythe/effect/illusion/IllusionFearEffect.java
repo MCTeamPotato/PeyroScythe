@@ -33,7 +33,10 @@ public class IllusionFearEffect extends MagicMobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!(entity instanceof PathfinderMob mob)) return;
+        if (!(entity instanceof PathfinderMob mob)) {
+            entity.removeEffect(this);
+            return;
+        }
         if (mob.level().isClientSide) return;
         if(entity.getType().is(TagsRegistry.ILLUSION_IMMUNE)) {
             entity.removeEffect(this);
