@@ -32,15 +32,23 @@ import java.util.List;
  * 它本身不做传送，只负责：
  * 1. 标记施法位置（玩家必须靠近它才能念咒）；
  * 2. 给领域内的生物挂上"旅者"标记；
- * 3. 播放光环粒子/音效，存活 15 秒后消散。
+ * 3. 播放光环粒子/音效，存活一段时间后消散。
+ * <p>
+ * 剩余使用次数与法术等级一致（1/2/3 次），每次成功传送消耗一次；
+ * 次数耗尽才会消失。次数与等级都会同步到客户端，用于渲染剩余光点。
  */
 public class MundusEntity extends Projectile implements AntiMagicSusceptible {
 
-    private static final int LIFETIME_TICKS = 300;
+    private static final int BASE_LIFETIME_TICKS = 300;
+    private static final int LIFETIME_PER_EXTRA_USE = 100;
 
     private static final EntityDataAccessor<Float> DATA_RADIUS =
             SynchedEntityData.defineId(MundusEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> SPELL_LEVEL =
+    private static final EntityDataAccessor<Integer> DATA_SPELL_LEVEL =
+            SynchedEntityData.defineId(MundusEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_USES =
+            SynchedEntityData.defineId(MundusEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_MAX_USES =
             SynchedEntityData.defineId(MundusEntity.class, EntityDataSerializers.INT);
 
     private List<Entity> trackingEntities = new ArrayList<>();
@@ -76,15 +84,71 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
     @Override
     protected void defineSynchedData() {
         this.getEntityData().define(DATA_RADIUS, 1.0F);
-        this.getEntityData().define(SPELL_LEVEL, 1);
+        this.getEntityData().define(DATA_SPELL_LEVEL, 1);
+        this.getEntityData().define(DATA_USES, 1);
+        this.getEntityData().define(DATA_MAX_USES, 1);
     }
 
     public void setSpellLevel(int level) {
-        this.entityData.set(SPELL_LEVEL, level);
+        int clamped = Math.max(1, level);
+        this.entityData.set(DATA_SPELL_LEVEL, clamped);
+        if (!this.level().isClientSide) {
+            this.entityData.set(DATA_MAX_USES, clamped);
+            this.entityData.set(DATA_USES, clamped);
+        }
     }
 
     public int getSpellLevel() {
-        return this.entityData.get(SPELL_LEVEL);
+        return this.entityData.get(DATA_SPELL_LEVEL);
+    }
+
+    /** 剩余可传送次数。 */
+    public int getUses() {
+        return this.entityData.get(DATA_USES);
+    }
+
+    public void setUses(int uses) {
+        this.entityData.set(DATA_USES, Math.max(0, uses));
+    }
+
+    public int getMaxUses() {
+        return Math.max(1, this.entityData.get(DATA_MAX_USES));
+    }
+
+    public void setMaxUses(int maxUses) {
+        this.entityData.set(DATA_MAX_USES, Math.max(1, maxUses));
+    }
+
+    /**
+     * 消耗一次使用次数；返回 true 表示次数耗尽、小球已消散。
+     * 只应在服务端调用。
+     */
+    public boolean consumeUse() {
+        if (this.level().isClientSide) {
+            return false;
+        }
+        int left = this.getUses() - 1;
+        if (left > 0) {
+            this.setUses(left);
+            return false;
+        }
+        this.setUses(0);
+        this.exhaust();
+        return true;
+    }
+
+    /** 消散：粒子爆发 + 音效 + 移除实体。 */
+    private void exhaust() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.END_ROD,
+                    this.getX(), this.getY() + this.getRadius() * 0.5D, this.getZ(),
+                    48, 0.7D, 0.7D, 0.7D, 0.03D);
+            serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                    this.getX(), this.getY() + this.getRadius() * 0.5D, this.getZ(),
+                    24, 0.5D, 0.5D, 0.5D, 0.06D);
+            this.playSound(SoundRegistry.HOLY_CAST.get(), this.getRadius() / 2.0F, 1.0F);
+        }
+        this.discard();
     }
 
     @Override
@@ -113,6 +177,8 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
         tag.putFloat("Radius", this.getRadius());
         tag.putInt("Age", this.tickCount);
         tag.putInt("SpellLevel", this.getSpellLevel());
+        tag.putInt("Uses", this.getUses());
+        tag.putInt("MaxUses", this.getMaxUses());
         super.addAdditionalSaveData(tag);
     }
 
@@ -123,7 +189,13 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
             this.setRadius(tag.getFloat("Radius"));
         }
         if (tag.contains("SpellLevel")) {
-            this.setSpellLevel(tag.getInt("SpellLevel"));
+            this.entityData.set(DATA_SPELL_LEVEL, Math.max(1, tag.getInt("SpellLevel")));
+        }
+        if (tag.contains("MaxUses")) {
+            this.entityData.set(DATA_MAX_USES, Math.max(1, tag.getInt("MaxUses")));
+        }
+        if (tag.contains("Uses")) {
+            this.entityData.set(DATA_USES, Math.max(0, tag.getInt("Uses")));
         }
         super.readAdditionalSaveData(tag);
     }
@@ -159,13 +231,9 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
         }
 
         ServerLevel serverLevel = (ServerLevel) this.level();
-
-        if (this.tickCount > LIFETIME_TICKS) {
-            this.discard();
-            this.playSound(SoundRegistry.HOLY_CAST.get(), this.getRadius() / 2.0F, 1.0F);
-            serverLevel.sendParticles(ParticleTypes.END_ROD,
-                    this.getX(), this.getY() + this.getRadius() * 0.5D, this.getZ(),
-                    40, 0.6D, 0.6D, 0.6D, 0.02D);
+        int lifetime = BASE_LIFETIME_TICKS + LIFETIME_PER_EXTRA_USE * (this.getMaxUses() - 1);
+        if (this.tickCount > lifetime) {
+            this.exhaust();
             return;
         }
 

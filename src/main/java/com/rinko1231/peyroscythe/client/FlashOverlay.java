@@ -7,37 +7,59 @@ import net.minecraft.util.Mth;
 /**
  * 客户端白屏闪光覆盖层。
  * <p>
- * 时间轴：淡入(fadeIn) -> 保持纯白(hold) -> 淡出(fadeOut)。
- * 服务端在"保持纯白"的阶段执行传送，所以玩家看不到地点突变。
- * 渲染注册在 {@code ClientSetup#registerOverlays}，位于所有原版 HUD 之上。
+ * 两阶段：
+ * <ul>
+ *   <li>{@link #start(int, int)}：淡入到全白后一直保持（等待服务端的传送完成信号）；</li>
+ *   <li>{@link #end(int)}：从当前亮度开始淡出。</li>
+ * </ul>
+ * 这样"传送瞬间一定是全白"，不受网络延迟影响；
+ * 同时有 12 秒兜底超时，避免服务端意外没发 END 时永久白屏。
  */
 public final class FlashOverlay {
 
+    private static final int SAFETY_TIMEOUT_TICKS = 240;
+
     private static boolean active = false;
+    private static boolean fadingOut = false;
+
     private static int startTick = 0;
     private static int fadeInTicks = 10;
-    private static int holdTicks = 8;
+    private static int endTick = 0;
     private static int fadeOutTicks = 45;
-    private static int argb = 0xFFFFFFFF;
+    private static int argb = 0xFFFFFDF5;
 
     private FlashOverlay() {
     }
 
-    public static void start(int fadeIn, int hold, int fadeOut, int color) {
+    public static void start(int fadeIn, int color) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) {
             return;
         }
         active = true;
+        fadingOut = false;
         startTick = mc.player.tickCount;
-        fadeInTicks = Math.max(1, fadeIn);
-        holdTicks = Math.max(0, hold);
-        fadeOutTicks = Math.max(1, fadeOut);
+        fadeInTicks = Math.max(0, fadeIn);
         argb = color;
+    }
+
+    public static void end(int fadeOut) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return;
+        }
+        if (!active) {
+            // 没收到 START（极端情况）：直接全白再淡出
+            start(0, argb);
+        }
+        fadingOut = true;
+        endTick = mc.player.tickCount;
+        fadeOutTicks = Math.max(1, fadeOut);
     }
 
     public static void stop() {
         active = false;
+        fadingOut = false;
     }
 
     public static boolean isActive() {
@@ -50,27 +72,28 @@ public final class FlashOverlay {
         }
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) {
-            active = false;
-            return;
-        }
-
-        int elapsed = mc.player.tickCount - startTick;
-        int total = fadeInTicks + holdTicks + fadeOutTicks;
-        if (elapsed < 0 || elapsed >= total) {
-            active = false;
+            stop();
             return;
         }
 
         float alpha;
-        if (elapsed < fadeInTicks) {
-            float t = elapsed / (float) fadeInTicks;
-            // ease-out：一开始就快速泛白，末尾放缓，避免"啪一下变白"
-            alpha = 1.0F - (1.0F - t) * (1.0F - t);
-        } else if (elapsed < fadeInTicks + holdTicks) {
-            alpha = 1.0F;
-        } else {
-            float t = (elapsed - fadeInTicks - holdTicks) / (float) fadeOutTicks;
+        if (fadingOut) {
+            int elapsed = mc.player.tickCount - endTick;
+            if (elapsed < 0 || elapsed >= fadeOutTicks) {
+                stop();
+                return;
+            }
+            float t = elapsed / (float) fadeOutTicks;
             alpha = 1.0F - t * t * (3.0F - 2.0F * t);
+        } else {
+            int elapsed = mc.player.tickCount - startTick;
+            if (elapsed < 0 || elapsed > SAFETY_TIMEOUT_TICKS) {
+                stop();
+                return;
+            }
+            float t = fadeInTicks <= 0 ? 1.0F : Math.min(1.0F, elapsed / (float) fadeInTicks);
+            // ease-out：一开始就快速泛白，末尾放缓
+            alpha = 1.0F - (1.0F - t) * (1.0F - t);
         }
 
         int baseAlpha = (argb >>> 24) & 0xFF;

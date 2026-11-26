@@ -32,15 +32,16 @@ import javax.annotation.Nullable;
 /**
  * "世界"（Mundus）的传送流程。
  * <p>
- * 流程：检索最近的村庄结构 -> 找安全落点 -> 向玩家发送白屏闪光 ->
- * 在屏幕最白时执行传送 -> 目的地施加反胃（眩晕）并播放音效。
- * 整个过程中玩家看不到地点突变。
+ * 流程：检索最近的村庄结构 -> 找安全落点 -> 开始白屏淡入 ->
+ * 等待画面全白后传送 -> 传送同 tick 通知客户端开始淡出 -> 施加反胃（眩晕）。
+ * 白屏分为 START/END 两个包，因此即使网络有延迟，传送时也一定是全白。
  */
 public final class TeleportHelper {
 
-    private static final int FADE_IN_TICKS = 14;
-    private static final int HOLD_TICKS = 8;
-    private static final int FADE_OUT_TICKS = 45;
+    private static final int FADE_IN_TICKS = 10;
+    /** 全白后再等这么多 tick 才传送，给网络延迟留余量。 */
+    private static final int WHITE_HOLD_TICKS = 10;
+    private static final int FADE_OUT_TICKS = 50;
 
     private static final int WHITE = 0xFFFFFDF5; // 微暖的白，不是死白
 
@@ -50,7 +51,7 @@ public final class TeleportHelper {
     /**
      * 把玩家传送到最近的村庄结构。
      *
-     * @param orb 触发传送的"世界"小球，可为 null（此时仅传送、不消耗小球）
+     * @param orb 触发传送的"世界"小球，可为 null（此时仅传送、不消耗次数）
      * @return 是否成功找到目的地并发起传送
      */
     public static boolean tpToNearestVillage(ServerPlayer player, int searchRadius, @Nullable MundusEntity orb) {
@@ -84,27 +85,29 @@ public final class TeleportHelper {
 
         final boolean flash = PeyroScytheConfig.mundusFlashbanged.get();
         if (flash) {
-            PeyroMessages.sendToPlayer(
-                    new ClientboundFlashPacket(FADE_IN_TICKS, HOLD_TICKS, FADE_OUT_TICKS, WHITE), player);
+            PeyroMessages.sendToPlayer(ClientboundFlashPacket.start(FADE_IN_TICKS, WHITE), player);
         }
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.2F, 1.6F);
         player.displayClientMessage(Component.translatable("message.peyroscythe.mundus.success"), false);
 
-        // 消耗小球：在原地炸开一圈圣光
+        // 消耗一次使用次数；只有次数耗尽时小球才会消散
         if (orb != null && !orb.isRemoved()) {
             Vec3 p = orb.position();
-            level.sendParticles(ParticleTypes.END_ROD, p.x, p.y + 0.3D, p.z, 48, 0.7D, 0.7D, 0.7D, 0.02D);
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, p.x, p.y + 0.3D, p.z, 24, 0.5D, 0.5D, 0.5D, 0.06D);
-            orb.discard();
+            level.sendParticles(ParticleTypes.END_ROD, p.x, p.y + 0.3D, p.z, 24, 0.5D, 0.5D, 0.5D, 0.02D);
+            boolean exhausted = orb.consumeUse();
+            if (!exhausted) {
+                player.displayClientMessage(
+                        Component.translatable("message.peyroscythe.mundus.remaining", orb.getUses()), true);
+            }
         }
         player.removeEffect(MobEffectRegistry.VIATOR_MUNDI.get());
 
         final double tx = target.getX() + 0.5D;
         final double ty = target.getY();
         final double tz = target.getZ() + 0.5D;
-        final int delay = flash ? FADE_IN_TICKS + HOLD_TICKS : 0;
+        final int delay = flash ? FADE_IN_TICKS + WHITE_HOLD_TICKS : 0;
 
         MinecraftServer server = player.server;
         server.tell(new TickTask(server.getTickCount() + delay, () -> {
@@ -113,6 +116,11 @@ public final class TeleportHelper {
             }
 
             player.teleportTo(level, tx, ty, tz, player.getYRot(), player.getXRot());
+
+            // 传送完成的同一 tick 才开始淡出，保证"到达时一定是全白"
+            if (flash) {
+                PeyroMessages.sendToPlayer(ClientboundFlashPacket.end(FADE_OUT_TICKS), player);
+            }
 
             // 到达后的眩晕：原版反胃自带画面扭曲，同时关掉药水粒子避免出戏
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0, false, false, true));

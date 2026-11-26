@@ -73,10 +73,12 @@ public class MundusRenderer extends EntityRenderer<MundusEntity> {
         VertexConsumer core = buffer.getBuffer(CORE_TYPE);
         drawQuad(core, poseStack.last().pose(), scale * 0.95F, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        // 环绕的小光点
+        // 环绕光点数量 = 剩余使用次数，直观显示还能传送几次
+        int uses = Math.max(0, entity.getUses());
+        int maxUses = Math.max(1, entity.getMaxUses());
         VertexConsumer spark = buffer.getBuffer(SPARK_TYPE);
-        for (int i = 0; i < 4; i++) {
-            double angle = Math.toRadians(time * 12.0D + i * 90.0D);
+        for (int i = 0; i < uses; i++) {
+            double angle = Math.toRadians(time * 12.0D + i * (360.0D / maxUses));
             float x = (float) Math.cos(angle) * scale * 1.6F;
             float y = (float) Math.sin(angle) * scale * 0.9F;
             poseStack.pushPose();

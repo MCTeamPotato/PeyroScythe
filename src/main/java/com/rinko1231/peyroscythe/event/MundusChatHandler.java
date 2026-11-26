@@ -68,7 +68,7 @@ public final class MundusChatHandler {
         List<MundusEntity> orbs = player.level().getEntitiesOfClass(
                 MundusEntity.class,
                 player.getBoundingBox().inflate(ORB_RANGE),
-                orb -> orb.isAlive() && !orb.isRemoved());
+                orb -> orb.isAlive() && !orb.isRemoved() && orb.getUses() > 0);
         MundusEntity nearest = null;
         double best = Double.MAX_VALUE;
         for (MundusEntity orb : orbs) {
