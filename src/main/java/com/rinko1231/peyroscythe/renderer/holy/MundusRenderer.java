@@ -16,7 +16,10 @@ import org.joml.Matrix4f;
 /**
  * "世界"投影的渲染器。
  * 结构：外发光 -> 旋转符文环 -> 核心 -> 环绕光点，另有一个水平旋转的光环增加立体感。
- * 全部是朝向相机的 billboard + 加色混合；贴图都是 16x16 像素画，放大后保留 Minecraft 的颗粒感。
+ * 全部是朝向相机的 billboard + 加色混合；贴图都是 16x16 像素画。
+ * <p>
+ * 视觉尺寸与实体的碰撞箱解耦：整体控制在 1 格以内（核心约 0.6 格），
+ * 避免法术等级 3 时出现一整块巨大的黄色光墙。
  */
 public class MundusRenderer extends EntityRenderer<MundusEntity> {
 
@@ -39,6 +42,14 @@ public class MundusRenderer extends EntityRenderer<MundusEntity> {
     private static final net.minecraft.client.renderer.RenderType SPARK_TYPE =
             MundusRenderTypes.getMundusGlow(SPARK_TEXTURE);
 
+    /** 核心半径（格）。总发光直径约 1.1 格，核心约 0.6 格。 */
+    private static final float CORE_HALF = 0.30F;
+    private static final float GLOW_HALF = 0.55F;
+    private static final float RING_HALF = 0.42F;
+    private static final float FLAT_RING_HALF = 0.40F;
+    private static final float SPARK_ORBIT = 0.36F;
+    private static final float SPARK_HALF = 0.07F;
+
     public MundusRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
@@ -48,30 +59,30 @@ public class MundusRenderer extends EntityRenderer<MundusEntity> {
                        PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
 
         float time = entity.tickCount + partialTick;
-        float radius = Math.max(entity.getRadius(), 0.5F);
-        float scale = radius * 0.55F * (1.0F + 0.05F * Mth.sin(time * 0.12F));
-        float bob = Mth.sin(time * 0.06F) * 0.08F;
+        float pulse = 1.0F + 0.05F * Mth.sin(time * 0.12F);
+        float bob = Mth.sin(time * 0.06F) * 0.04F;
 
         poseStack.pushPose();
-        poseStack.translate(0.0D, entity.getBbHeight() * 0.5D + bob, 0.0D);
+        // 视觉上悬浮在落点上方约 1.2 格，而不是用 4 格碰撞箱的中心
+        poseStack.translate(0.0D, entity.getBbHeight() * 0.3D + bob, 0.0D);
 
         poseStack.pushPose();
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
 
-        // 外发光
+        // 外发光：白心淡金，边缘完全透明
         VertexConsumer glow = buffer.getBuffer(GLOW_TYPE);
-        drawQuad(glow, poseStack.last().pose(), scale * 2.6F, 1.0F, 0.95F, 0.80F, 0.85F);
+        drawQuad(glow, poseStack.last().pose(), GLOW_HALF * pulse, 1.0F, 0.96F, 0.86F, 0.55F);
 
         // 旋转的符文环
         poseStack.pushPose();
         poseStack.mulPose(Axis.ZP.rotationDegrees(time * 0.7F));
         VertexConsumer ring = buffer.getBuffer(RING_TYPE);
-        drawQuad(ring, poseStack.last().pose(), scale * 1.9F, 1.0F, 0.90F, 0.55F, 0.90F);
+        drawQuad(ring, poseStack.last().pose(), RING_HALF * pulse, 1.0F, 0.94F, 0.78F, 0.75F);
         poseStack.popPose();
 
         // 高亮核心
         VertexConsumer core = buffer.getBuffer(CORE_TYPE);
-        drawQuad(core, poseStack.last().pose(), scale * 0.95F, 1.0F, 1.0F, 1.0F, 1.0F);
+        drawQuad(core, poseStack.last().pose(), CORE_HALF * pulse, 1.0F, 1.0F, 1.0F, 1.0F);
 
         // 环绕光点数量 = 剩余使用次数，直观显示还能传送几次
         int uses = Math.max(0, entity.getUses());
@@ -79,11 +90,11 @@ public class MundusRenderer extends EntityRenderer<MundusEntity> {
         VertexConsumer spark = buffer.getBuffer(SPARK_TYPE);
         for (int i = 0; i < uses; i++) {
             double angle = Math.toRadians(time * 12.0D + i * (360.0D / maxUses));
-            float x = (float) Math.cos(angle) * scale * 1.6F;
-            float y = (float) Math.sin(angle) * scale * 0.9F;
+            float x = (float) Math.cos(angle) * SPARK_ORBIT * pulse;
+            float y = (float) Math.sin(angle) * SPARK_ORBIT * 0.6F * pulse;
             poseStack.pushPose();
             poseStack.translate(x, y, 0.02F);
-            drawQuad(spark, poseStack.last().pose(), scale * 0.35F, 1.0F, 0.92F, 0.60F, 0.90F);
+            drawQuad(spark, poseStack.last().pose(), SPARK_HALF * pulse, 1.0F, 0.95F, 0.80F, 0.90F);
             poseStack.popPose();
         }
         poseStack.popPose();
@@ -93,7 +104,7 @@ public class MundusRenderer extends EntityRenderer<MundusEntity> {
         poseStack.mulPose(Axis.YP.rotationDegrees(time * 0.5F));
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         VertexConsumer flatRing = buffer.getBuffer(RING_TYPE);
-        drawQuad(flatRing, poseStack.last().pose(), scale * 1.6F, 1.0F, 0.85F, 0.45F, 0.50F);
+        drawQuad(flatRing, poseStack.last().pose(), FLAT_RING_HALF * pulse, 1.0F, 0.88F, 0.66F, 0.35F);
         poseStack.popPose();
 
         poseStack.popPose();

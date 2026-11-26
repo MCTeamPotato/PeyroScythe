@@ -141,11 +141,11 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
     private void exhaust() {
         if (this.level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.END_ROD,
-                    this.getX(), this.getY() + this.getRadius() * 0.5D, this.getZ(),
-                    48, 0.7D, 0.7D, 0.7D, 0.03D);
+                    this.getX(), this.getY() + this.getBbHeight() * 0.3D, this.getZ(),
+                    36, 0.35D, 0.35D, 0.35D, 0.03D);
             serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                    this.getX(), this.getY() + this.getRadius() * 0.5D, this.getZ(),
-                    24, 0.5D, 0.5D, 0.5D, 0.06D);
+                    this.getX(), this.getY() + this.getBbHeight() * 0.3D, this.getZ(),
+                    18, 0.25D, 0.25D, 0.25D, 0.05D);
             this.playSound(SoundRegistry.HOLY_CAST.get(), this.getRadius() / 2.0F, 1.0F);
         }
         this.discard();
@@ -237,12 +237,12 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
             return;
         }
 
-        // 缓慢绕圈的金色光点
+        // 缓慢绕圈的金色光点（贴合新的小尺寸视觉）
         if (this.tickCount % 4 == 0) {
             double angle = this.tickCount * 0.35D;
-            double r = this.getRadius() * 0.9D;
-            double y = this.getY() + this.getRadius() * 0.45D
-                    + Math.sin(this.tickCount * 0.15D) * 0.25D;
+            double r = 0.45D;
+            double y = this.getY() + this.getBbHeight() * 0.3D
+                    + Math.sin(this.tickCount * 0.15D) * 0.12D;
             serverLevel.sendParticles(ParticleTypes.END_ROD,
                     this.getX() + Math.cos(angle) * r, y, this.getZ() + Math.sin(angle) * r,
                     1, 0.0D, 0.0D, 0.0D, 0.0D);
