@@ -90,7 +90,7 @@ public class IllusionCrazySpell extends AbstractSpell {
                    target.removeEffect(MobEffectRegistry.ILLUSION_FEAR.get());
 
                 // 添加疯狂效果
-                target.addEffect(new MobEffectInstance(MobEffectRegistry.ILLUSION_CRAZY.get(), this.getDuration(spellLevel, entity), this.getAmplifier(spellLevel, entity)));
+                target.addEffect(new MobEffectInstance(MobEffectRegistry.ILLUSION_CRAZY.get(), this.getDuration(spellLevel, entity), this.getAmplifier(spellLevel, entity), false, false, false));
             }
         }
         super.onCast(world, spellLevel, entity, castSource, playerMagicData);
