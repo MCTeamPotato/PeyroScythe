@@ -83,6 +83,7 @@ public class PeyroScytheConfig {
 
     public static ForgeConfigSpec.BooleanValue mundusAllowLooting;
     public static ForgeConfigSpec.BooleanValue mundusFlashbanged;
+    public static ForgeConfigSpec.ConfigValue<String> mundusIncantation;
 
     public static ForgeConfigSpec.BooleanValue chaosCradleAllowLooting;
     public static ForgeConfigSpec.IntValue chaosCradleAbyssalMudBaseDuration;
@@ -377,6 +378,10 @@ public class PeyroScytheConfig {
         mundusFlashbanged = BUILDER
                 .comment("Whether The Mundus will Flashbanged Teleporting player")
                 .define("mundusFlashbanged", true);
+
+        mundusIncantation = BUILDER
+                .comment("The word a player must say in chat while standing near the Mundus orb to trigger the teleport (case-insensitive)")
+                .define("mundusIncantation", "mundus");
 
         BUILDER.pop();
 

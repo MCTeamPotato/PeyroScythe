@@ -1,0 +1,214 @@
+==============================================================================
+ Mundus 法术 / 圣遗物"世界" —— 贴图生成提示词
+ 项目：Peyro's Scythe（Minecraft Forge 1.20.1）
+ 用途：发光小球实体、法术图标、粒子、白屏闪光
+==============================================================================
+
+【使用说明 / 给作者】
+1. 本文件分两部分：
+   A. 一次性生成"一张 4x4 网格贴图集"的提示词（你要求的单图方案）。
+   B. 8 个单独精灵的提示词（质量更好，推荐逐个生成）。
+2. 生成后把 PNG 放到工作区任意位置告诉我路径即可；我会：
+   - 按 16x16 逻辑像素裁切 / 最近邻缩放（nearest-neighbor）；
+   - 剔除多余背景、对齐透明边；
+   - 需要时再做 2x 放大（发光类贴图允许 32x32）。
+3. 图片模型很难精确画 16x16，所以提示词里强制它"先分格子、每格一个色块"：
+   最终图里每个小方块 = 我们的 1 个像素，我再做最近邻缩小，得到真正的像素图。
+4. 如果模型不听话，优先用 B 部分的单图提示词，一张一张来，成功率高很多。
+
+------------------------------------------------------------------------------
+ A. 一次性贴图集（4x4 网格，1024x1024）
+------------------------------------------------------------------------------
+
+PROMPT (copy everything between the lines):
+
+------------------------------------------------------------------
+A single square PNG image, 1024x1024 pixels, fully transparent background.
+
+It is a pixel-art SPRITE SHEET for a Minecraft 1.20.1 mod: a holy golden relic
+called "Mundus", a small floating orb of divine light.
+
+CRITICAL CONSTRUCTION RULE — GRID FIRST, THEN COLOR:
+- Mentally divide the 1024x1024 canvas into a 4x4 grid of 256x256 cells.
+- Inside every cell, the sprite must be drawn on a 16x16 logical-pixel grid:
+  each logical pixel is exactly one 16x16 square of one single flat color.
+- Do NOT draw smooth curves, anti-aliasing, blur, airbrush glow, gradients or
+  sub-pixel shapes. Build every circle and glow out of whole 16x16 squares.
+- Where a color transition is needed, use a 2-color checkerboard dither
+  pattern made of whole squares (Minecraft style), never a soft fade.
+- Each sprite is centered inside its 256x256 cell with at least 16 px of
+  transparent margin, and must not touch the cell border.
+- Leave every cell not listed below fully transparent.
+
+PALETTE (use only these, plus transparency):
+  #FFFFFF pure white highlight
+  #FFFDF2 warm white
+  #FFF3C4 ivory light
+  #FFE08A pale gold
+  #FFD25A gold
+  #F2B544 amber
+  #E8A62A deep amber
+  #C98A22 bronze shadow
+  #8F5C14 dark bronze
+  #1A1408 near-black brown (only for the spell icon background)
+
+SPRITE LAYOUT (cell = column,row counting from top-left):
+  Cell (1,1) "orb_core"      — 16x16, glowing sphere core
+  Cell (2,1) "orb_glow"      — 16x16, soft additive halo (transparent edges)
+  Cell (3,1) "rune_ring"     — 16x16, thin dashed golden rune ring
+  Cell (4,1) "spark"         — 16x16, 4-point star sparkle
+  Cell (1,2) "flash"         — 16x16, white radial screen-flash gradient
+  Cell (2,2) "spell_icon"    — 16x16, full-bleed spell icon (NO transparency)
+  Cell (3,2) "light_beam"    — 16x16, vertical light column
+  Cell (4,2) "halo_cross"    — 16x16, very soft 4-point cross glow
+  All other cells: fully transparent.
+
+CELL DETAILS:
+
+(1,1) orb_core — a perfect 14-pixel circle centered on the 16x16 grid.
+  Center 2x2 pixels pure #FFFFFF. Next ring #FFFDF2. Next #FFF3C4.
+  Body #FFE08A, lower-right body #FFD25A for volume, 1-pixel rim #F2B544.
+  Bottom-right rim shading #C98A22. Two 1-pixel specular white dots at
+  upper-left. Outside the circle: fully transparent. No black outline.
+
+(2,1) orb_glow — additive glow, drawn as concentric stepped rings, no smooth
+  gradient. Center 4x4 #FFF7D6 at full alpha. Ring 2: #FFE49A at ~60% alpha.
+  Ring 3: #FFCF66 at ~30% alpha. Ring 4 (outermost): 50% checkerboard dither
+  of #FFD25A at ~12% alpha. Corners fully transparent. It must look correct
+  when rendered additively over a dark scene.
+
+(3,1) rune_ring — a 1-pixel-thick circle of radius 6.5 centered on the grid,
+  made of 12 short golden dashes (#FFD25A) with 1-pixel gaps, plus four tiny
+  diamond runes (#FFF6D8) at north, east, south, west. Optional thin inner
+  circle of radius 4 in #E8A62A with 8 tick marks. Transparent inside/outside.
+
+(4,1) spark — a crisp 4-point sparkle: 1-pixel-wide vertical arm 11 px tall,
+  1-pixel-wide horizontal arm 11 px wide, white 2x2 center (#FFFFFF), tips
+  fading through #FFE08A to #F2B544. Four 1-pixel diagonal glints. Rest
+  transparent. No glow blur.
+
+(1,2) flash — a radial white screen-flash alpha ramp on the 16x16 grid:
+  center 4x4 fully opaque #FFFFFF, next ring #FFFDF5 at ~85% alpha, next ring
+  #FFF6E0 at ~55% alpha, outermost ring 50% checkerboard dither at ~25% alpha.
+  The four corners are nearly transparent. No smooth gradient — stepped rings
+  and dither only.
+
+(2,2) spell_icon — FULL-BLEED 16x16 icon, no transparent pixels, no margin.
+  Background: near-black warm brown #1A1408 with a subtle radial golden burst
+  (#8F5C14 stepping to #C98A22) drawn in whole pixels.
+  Foreground centered: a tiny 8-pixel glowing orb using the same colors as
+  orb_core, surrounded by a 1-pixel dashed golden ring.
+  It must remain readable when displayed at 16x16 UI size: strong silhouette,
+  high contrast, no tiny detail smaller than 1 pixel.
+
+(3,2) light_beam — vertical column centered on the grid: 2-pixel-wide
+  #FFFFFF core, 1 pixel #FFF3C4 on each side, 1 pixel #FFD25A on each outer
+  side; the top and bottom 3 rows fade out using whole-pixel dithering.
+  Transparent background left and right.
+
+(4,2) halo_cross — very soft 4-point cross glow: 1-pixel vertical and
+  horizontal arms 13 px long, #FFFFFF at center, #FFF3C4 mid, #FFD25A tips;
+  a few dithered pixels at the diagonaldirections; transparent background.
+  Keep it subtle: this will be drawn additively at ~40% alpha.
+
+RENDERING CONSTRAINTS:
+- Flat colors only. No 3D rendering, no photorealism, no lens flare, no bloom.
+- No text, no letters, no numbers, no watermark, no signature.
+- No grid lines, no cell borders, no drop shadows.
+- The final PNG must have a real alpha channel and a fully transparent
+  background (not white, not checkerboard-pattern pixels).
+------------------------------------------------------------------
+
+NEGATIVE PROMPT (if the interface has one):
+  blur, soft gradient, airbrush, glow bleed, anti-aliasing, smooth curve,
+  3D render, photorealistic, lens flare, bokeh, text, letters, numbers,
+  watermark, signature, grid lines, cell borders, drop shadow, white
+  background, checkerboard background, extra objects, background scenery
+
+------------------------------------------------------------------------------
+ B. 单独精灵提示词（推荐；每张 1024x1024，透明背景）
+------------------------------------------------------------------------------
+
+B0. 通用前缀（每张都加）：
+------------------------------------------------------------------
+A single 1024x1024 PNG with a fully transparent background.
+One Minecraft 1.20.1 pixel-art sprite, centered, nothing else.
+The sprite is a 16x16 logical-pixel image scaled up: each logical pixel is a
+16x16 flat square of one solid color. Hard edges, no anti-aliasing, no blur,
+no smooth gradients; use 2-color checkerboard dithering for transitions.
+Palette: #FFFFFF #FFFDF2 #FFF3C4 #FFE08A #FFD25A #F2B544 #E8A62A #C98A22
+#8F5C14. No text, no watermark, no grid, no shadow, no 3D.
+------------------------------------------------------------------
+
+B1. orb_core
+------------------------------------------------------------------
+[prefix] A perfect circle 14 logical pixels wide (of 16), a glowing golden
+sphere. Center 2x2 white #FFFFFF, then #FFFDF2, then #FFF3C4, body #FFE08A,
+lower-right body #FFD25A, 1-pixel rim #F2B544 with #C98A22 shading on the
+bottom-right arc. Two 1-pixel white specular dots at the upper-left. Fully
+transparent outside the circle. No black outline.
+------------------------------------------------------------------
+
+B2. orb_glow
+------------------------------------------------------------------
+[prefix] Additive radial glow made of stepped pixel rings: center 4x4 #FFF7D6
+opaque; ring 2 #FFE49A ~60% alpha; ring 3 #FFCF66 ~30% alpha; outer ring a
+50% checkerboard dither of #FFD25A at ~12% alpha. Corners fully transparent.
+No smooth gradient, only whole-pixel steps and dithering.
+------------------------------------------------------------------
+
+B3. rune_ring
+------------------------------------------------------------------
+[prefix] A thin 1-pixel golden ring, radius 6.5 logical pixels, made of 12
+dashes (#FFD25A) with 1-pixel gaps, plus 4 small diamond runes (#FFF6D8) at
+north/east/south/west. Optionally a thin inner ring radius 4 in #E8A62A with
+8 tick marks. Transparent inside and outside.
+------------------------------------------------------------------
+
+B4. spark
+------------------------------------------------------------------
+[prefix] A crisp 4-point star sparkle: 1-pixel vertical arm 11 px tall,
+1-pixel horizontal arm 11 px wide, 2x2 white center, tips #FFE08A to #F2B544.
+Four 1-pixel diagonal glints. Transparent everywhere else. No glow blur.
+------------------------------------------------------------------
+
+B5. flash
+------------------------------------------------------------------
+[prefix] A 16x16 radial white flash: 4x4 opaque #FFFFFF center, ring 2
+#FFFDF5 at ~85% alpha, ring 3 #FFF6E0 at ~55% alpha, outer ring 50%
+checkerboard dither at ~25% alpha, corners nearly transparent. Stepped rings
+only, no smooth gradient.
+------------------------------------------------------------------
+
+B6. spell_icon
+------------------------------------------------------------------
+[prefix] A full-bleed 16x16 spell icon with NO transparent pixels: near-black
+warm brown #1A1408 background with a subtle radial golden burst stepping
+through #8F5C14 and #C98A22; centered 8-pixel glowing orb (white core, pale
+gold body, amber rim) inside a 1-pixel dashed golden ring. Strong contrast,
+readable at 16x16, no detail smaller than 1 pixel.
+------------------------------------------------------------------
+
+B7. light_beam
+------------------------------------------------------------------
+[prefix] A vertical light column: 2-pixel-wide #FFFFFF core, 1 pixel #FFF3C4
+each side, 1 pixel #FFD25A outer; top and bottom 3 rows fade with whole-pixel
+dithering. Transparent on the left and right outside the column.
+------------------------------------------------------------------
+
+B8. halo_cross (optional)
+------------------------------------------------------------------
+[prefix] A very soft 4-point cross glow: 1-pixel vertical/horizontal arms
+13 px long, white center, ivory middle, gold tips, a few dithered diagonal
+pixels. Subtle; will be drawn additively at ~40% alpha.
+------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+ C. 交付检查清单（我自己用，也方便你判断）
+------------------------------------------------------------------------------
+[ ] PNG 有 alpha 通道，背景真透明
+[ ] 8 个精灵都在各自格子里，互不重叠
+[ ] 没有文字/水印/网格线
+[ ] 每个精灵左右上下对称（除非说明），16x16 缩小时仍可辨认
+[ ] 发光类（glow / halo / flash）是阶梯 + 抖动，不是高斯模糊
+[ ] 颜色只用了上面给的色板附近的值

@@ -4,238 +4,111 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.rinko1231.peyroscythe.PeyroScythe;
-import com.rinko1231.peyroscythe.init.BlockRegistry;
 import com.rinko1231.peyroscythe.spellentity.holy.MundusEntity;
 import com.rinko1231.peyroscythe.utils.mundus.MundusRenderTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Matrix3f;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
-
-
-
+/**
+ * "世界"投影的渲染器。
+ * 结构：外发光 -> 旋转符文环 -> 核心 -> 环绕光点，另有一个水平旋转的光环增加立体感。
+ * 全部是朝向相机的 billboard + 加色混合；贴图都是 16x16 像素画，放大后保留 Minecraft 的颗粒感。
+ */
 public class MundusRenderer extends EntityRenderer<MundusEntity> {
 
-    public static final ModelLayerLocation MODEL_LAYER_LOCATION =
-            new ModelLayerLocation(PeyroScythe.id( "mundus_rune_ball_model"), "main");
-    private static final float HALF_SQRT_3 = (float)(Math.sqrt((double)3.0F) / (double)2.0F);
+    private static final ResourceLocation CORE_TEXTURE =
+            PeyroScythe.id("textures/entity/mundus/orb_core.png");
+    private static final ResourceLocation GLOW_TEXTURE =
+            PeyroScythe.id("textures/entity/mundus/orb_glow.png");
+    private static final ResourceLocation RING_TEXTURE =
+            PeyroScythe.id("textures/entity/mundus/rune_ring.png");
+    private static final ResourceLocation SPARK_TEXTURE =
+            PeyroScythe.id("textures/entity/mundus/spark.png");
 
-    private static final ResourceLocation CENTER_TEXTURE = PeyroScythe.id("textures/entity/mundus/mundus.png");
-    private static final ResourceLocation BEAM_TEXTURE   = PeyroScythe.id("textures/entity/mundus/mundus_beam.png");
-    private static final ResourceLocation[] SWIRL_TEXTURES = new ResourceLocation[]{
-            PeyroScythe.id("textures/entity/mundus/mundus_0.png"),
-            PeyroScythe.id("textures/entity/mundus/mundus_1.png"),
-            PeyroScythe.id("textures/entity/mundus/mundus_2.png"),
-            PeyroScythe.id("textures/entity/mundus/mundus_3.png"),
-            PeyroScythe.id("textures/entity/mundus/mundus_4.png")
-    };
+    // RenderType 只创建一次，避免每帧生成新的缓冲对象
+    private static final net.minecraft.client.renderer.RenderType CORE_TYPE =
+            MundusRenderTypes.getMundusGlow(CORE_TEXTURE);
+    private static final net.minecraft.client.renderer.RenderType GLOW_TYPE =
+            MundusRenderTypes.getMundusGlow(GLOW_TEXTURE);
+    private static final net.minecraft.client.renderer.RenderType RING_TYPE =
+            MundusRenderTypes.getMundusGlow(RING_TEXTURE);
+    private static final net.minecraft.client.renderer.RenderType SPARK_TYPE =
+            MundusRenderTypes.getMundusGlow(SPARK_TEXTURE);
 
-    private final ModelPart orb;
-
-    public MundusRenderer(EntityRendererProvider.Context ctx) {
-        super(ctx);
-        ModelPart root = ctx.bakeLayer(MODEL_LAYER_LOCATION);
-        this.orb = root.getChild("orb");
-    }
-
-
-    public static LayerDefinition createBodyLayer() {
-        MeshDefinition mesh = new MeshDefinition();
-        PartDefinition root = mesh.getRoot();
-        root.addOrReplaceChild("orb",
-                CubeListBuilder.create().texOffs(0, 0).addBox(-4, -4, -4, 8, 8, 8),
-                PartPose.ZERO);
-        return LayerDefinition.create(mesh, 8, 8);
+    public MundusRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override
-    public void render(MundusEntity entity, float yaw, float partialTicks,
+    public void render(MundusEntity entity, float entityYaw, float partialTick,
                        PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
 
+        float time = entity.tickCount + partialTick;
+        float radius = Math.max(entity.getRadius(), 0.5F);
+        float scale = radius * 0.55F * (1.0F + 0.05F * Mth.sin(time * 0.12F));
+        float bob = Mth.sin(time * 0.06F) * 0.08F;
+
         poseStack.pushPose();
-        //移到中心
-        poseStack.translate(0.0, entity.getBoundingBox().getYsize() * 0.5, 0.0);
-        {
+        poseStack.translate(0.0D, entity.getBbHeight() * 0.5D + bob, 0.0D);
+
+        poseStack.pushPose();
+        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+
+        // 外发光
+        VertexConsumer glow = buffer.getBuffer(GLOW_TYPE);
+        drawQuad(glow, poseStack.last().pose(), scale * 2.6F, 1.0F, 0.95F, 0.80F, 0.85F);
+
+        // 旋转的符文环
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.ZP.rotationDegrees(time * 0.7F));
+        VertexConsumer ring = buffer.getBuffer(RING_TYPE);
+        drawQuad(ring, poseStack.last().pose(), scale * 1.9F, 1.0F, 0.90F, 0.55F, 0.90F);
+        poseStack.popPose();
+
+        // 高亮核心
+        VertexConsumer core = buffer.getBuffer(CORE_TYPE);
+        drawQuad(core, poseStack.last().pose(), scale * 0.95F, 1.0F, 1.0F, 1.0F, 1.0F);
+
+        // 环绕的小光点
+        VertexConsumer spark = buffer.getBuffer(SPARK_TYPE);
+        for (int i = 0; i < 4; i++) {
+            double angle = Math.toRadians(time * 12.0D + i * 90.0D);
+            float x = (float) Math.cos(angle) * scale * 1.6F;
+            float y = (float) Math.sin(angle) * scale * 0.9F;
             poseStack.pushPose();
-
-            float s = entity.getBbWidth() * 0.5F;
-            poseStack.scale(s*0.5f, s*0.5f, s*0.5f);
-
-
-            // ✅ 绕 Y 轴旋转
-            float rotation = (entity.tickCount + partialTicks) * 18.0F; // 每 tick 旋转 2 度，可调
-            poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
-
-            // ✅ 把方块对齐到实体中心
-            poseStack.translate(-0.5, -0.5, -0.5);
-
-            Minecraft mc = Minecraft.getInstance();
-            BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
-            BlockState state = BlockRegistry.MUNDUS_BLOCK.get().defaultBlockState();
-
-            dispatcher.renderSingleBlock(
-                    state,
-                    poseStack,
-                    buffer,
-                    packedLight,
-                    OverlayTexture.NO_OVERLAY
-            );
-
+            poseStack.translate(x, y, 0.02F);
+            drawQuad(spark, poseStack.last().pose(), scale * 0.35F, 1.0F, 0.92F, 0.60F, 0.90F);
             poseStack.popPose();
         }
+        poseStack.popPose();
 
-        // 光晕扇形光芒（替换原本能量喷射）
-        {
-            poseStack.pushPose();
-
-            float t = entity.tickCount + partialTicks;
-            float scale = entity.getBbWidth() * 0.35F;
-
-            // billboard：让光芒永远朝向相机
-            poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-
-            VertexConsumer vc = buffer.getBuffer(MundusRenderTypes.getMundusShine());
-
-            // 光芒数量
-            int rays = 6;
-            for (int i = 0; i < rays; i++) {
-                poseStack.pushPose();
-
-                // 每条光芒的旋转角度（随时间自转）
-                float angle = (t * 0.5F + (360F / rays) * i);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(angle));
-
-                float length = (3F + (float)Math.sin(t * 0.1F + i)) * scale;
-                float width  = (0.8F - 0.2F * (float)Math.cos(t * 0.13F + i)) * scale;
-
-                PoseStack.Pose last = poseStack.last();
-                Matrix4f m4 = last.pose();
-                Matrix3f m3 = last.normal();
-
-                // 中心点（金白色，高 alpha）
-                vc.vertex(m4, 0F, 0F, 0F)
-                        .color(255, 240, 180, 220)
-                        .uv(0.5F, 0F)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880)
-                        .normal(m3, 0F, 1F, 0F).endVertex();
-
-                // 左角点（渐隐）
-                vc.vertex(m4, -HALF_SQRT_3 * width, length, 0F)
-                        .color(255, 210, 100, 0)
-                        .uv(0F, 1F)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880)
-                        .normal(m3, 0F, -1F, 0F).endVertex();
-
-                // 右角点（渐隐）
-                vc.vertex(m4, HALF_SQRT_3 * width, length, 0F)
-                        .color(255, 210, 100, 0)
-                        .uv(1F, 1F)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880)
-                        .normal(m3, 0F, -1F, 0F).endVertex();
-
-                // 再补一个左角闭合
-                vc.vertex(m4, -HALF_SQRT_3 * width, length, 0F)
-                        .color(255, 210, 100, 0)
-                        .uv(0F, 1F)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880)
-                        .normal(m3, 0F, -1F, 0F).endVertex();
-
-                poseStack.popPose();
-            }
-
-            poseStack.popPose();
-        }
-
-        {
-            poseStack.pushPose();
-
-            float entityScale = entity.getBbWidth() * 0.018F;
-            poseStack.scale(0.5F * entityScale, 0.5F * entityScale, 0.5F * entityScale);
-            poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-            poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
-            poseStack.translate(5.0F, 0.0F, 0.0F);
-
-            // 环尺寸
-            float t = (entity.tickCount + partialTicks) * 0.1F;
-
-
-            poseStack.popPose();
-        }
+        // 水平方向缓慢旋转的光环，让球看起来更立体
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(time * 0.5F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+        VertexConsumer flatRing = buffer.getBuffer(RING_TYPE);
+        drawQuad(flatRing, poseStack.last().pose(), scale * 1.6F, 1.0F, 0.85F, 0.45F, 0.50F);
+        poseStack.popPose();
 
         poseStack.popPose();
-        super.render(entity, yaw, partialTicks, poseStack, buffer, packedLight);
+
+        super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+    }
+
+    private static void drawQuad(VertexConsumer consumer, Matrix4f matrix,
+                                 float half, float r, float g, float b, float a) {
+        consumer.vertex(matrix, -half, -half, 0.0F).color(r, g, b, a).uv(0.0F, 1.0F).endVertex();
+        consumer.vertex(matrix, -half, half, 0.0F).color(r, g, b, a).uv(0.0F, 0.0F).endVertex();
+        consumer.vertex(matrix, half, half, 0.0F).color(r, g, b, a).uv(1.0F, 0.0F).endVertex();
+        consumer.vertex(matrix, half, -half, 0.0F).color(r, g, b, a).uv(1.0F, 1.0F).endVertex();
     }
 
     @Override
     public ResourceLocation getTextureLocation(MundusEntity entity) {
-        return CENTER_TEXTURE;
+        return CORE_TEXTURE;
     }
-
-    private ResourceLocation getSwirlTexture(MundusEntity e, int offset) {
-        int frame = (e.tickCount + offset) % SWIRL_TEXTURES.length;
-        return SWIRL_TEXTURES[frame];
-    }
-
 }
-
-//旋转符文壳
-//太丑了，不要了.jpg
-        /*
-        {
-            float entityScale = entity.getBbWidth() * 0.200F;
-            poseStack.pushPose();
-            poseStack.scale(0.5F * entityScale, 0.5F * entityScale, 0.5F * entityScale);
-
-            float t = entity.tickCount + partialTicks;
-
-
-            final float base0 = 2.0F, base1 = 1.8F, base2 = 1.6F;
-            final float breathe = 0.07F * Mth.sin(t * 0.15F);
-
-            float[] layers = new float[]{base0 + breathe, base1 - breathe * 0.5F, base2 - breathe};
-
-            for (int i = 0; i < 3; i++) {
-                poseStack.pushPose();
-
-
-                float r = Mth.clamp(0.25F * (1 + i), 0.0F, 1.0F);
-                float g = Mth.clamp(0.80F * (1 + i), 0.0F, 1.0F);
-                float b = Mth.clamp(1.00F * (1 + i), 0.0F, 1.0F);
-
-                float f = t + i * 777;
-                float swirlX = Mth.cos(0.065F * f) * 180.0F;
-                float swirlY = Mth.sin(0.065F * f) * 180.0F;
-                float swirlZ = Mth.cos(0.065F * f + 5464.0F) * 180.0F;
-
-                poseStack.mulPose(Axis.XP.rotationDegrees(swirlX * (i % 2 == 0 ? 1 : -1)));
-                poseStack.mulPose(Axis.YP.rotationDegrees(swirlY * (i % 2 == 0 ? 1 : -1)));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(swirlZ * (i % 2 == 0 ? 1 : -1)));
-
-                float scale = layers[i];
-                poseStack.scale(scale, scale, scale);
-
-                ResourceLocation tex = getSwirlTexture(entity, i * i);
-                VertexConsumer shell = buffer.getBuffer(MagicArrowRenderer.CustomRenderType.magic(tex));
-                this.orb.render(poseStack, shell, 15728880, OverlayTexture.NO_OVERLAY, r, g, b, 1.0F);
-
-                poseStack.popPose();
-            }
-
-            poseStack.popPose();
-        }
-*/
-

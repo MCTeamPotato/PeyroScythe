@@ -64,7 +64,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         //event.registerLayerDefinition(IceTombModel.LAYER_LOCATION, IceTombModel::createBodyLayer);
-        event.registerLayerDefinition(MundusRenderer.MODEL_LAYER_LOCATION, MundusRenderer::createBodyLayer);
         event.registerLayerDefinition(GoldenBellRenderer.MODEL_LAYER_LOCATION, GoldenBellRenderer::createBodyLayer);
         event.registerLayerDefinition(NeroHolyRayRenderer.MODEL_LAYER_LOCATION, NeroHolyRayRenderer::createBodyLayer);
         event.registerLayerDefinition(BlackFlameWingsModel.BLACK_FLAME_WINGS_LAYER, BlackFlameWingsModel::createLayer);
@@ -100,45 +99,9 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent e) {
-        e.registerAboveAll("flashbang_whiteout", (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
-            Minecraft mc = Minecraft.getInstance();
-            LocalPlayer player = mc.player;
-            if (player == null) return;
-
-            MobEffectInstance inst = player.getEffect(MobEffectRegistry.FLASHBANGED.get());
-            if (inst == null) return;
-
-            float alpha = getAlpha(inst);
-            if (alpha <= 0.01f) return;
-
-            int a = (int)(alpha * 255) << 24;
-            int color = a | 0xFFFFFF; // ARGB
-            guiGraphics.fill(0, 0, screenWidth, screenHeight, color);
-
-        });
-    }
-
-
-    private static float getAlpha(MobEffectInstance inst) {
-        int remaining = inst.getDuration();   // 剩余tick
-        int amp = inst.getAmplifier();
-
-// 只在最后 fadeTail tick 内淡出；其余时间保持全白
-        int fadeTail = 30; // 尾段淡出窗口（例：30tick=1.5s），可调
-        float alpha;
-        if (remaining > fadeTail) {
-            alpha = 1.0f; // 瞬间且持续全白
-        } else {
-            // 线性淡出（更干脆）
-//  alpha = remaining / (float) fadeTail;
-
-            // 或者使用“柔一点”的 ease-out（开头慢、末端快地消失）
-            float x = remaining / (float) fadeTail;     // 0..1
-            alpha = x * x * (3f - 2f * x);              // smoothstep
-        }
-
-// 放大强度（可选）
-        alpha = Math.min(1.0f, alpha + amp * 0.1f);
-        return alpha;
+        // 白屏闪光由网络包驱动（ClientboundFlashPacket），不依赖 MobEffect，
+        // 因此不会出现原版药水粒子和 HUD 效果图标。
+        e.registerAboveAll("mundus_flash", (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
+                com.rinko1231.peyroscythe.client.FlashOverlay.render(guiGraphics));
     }
 }

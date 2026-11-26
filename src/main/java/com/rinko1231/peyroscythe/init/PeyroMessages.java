@@ -5,6 +5,7 @@ import com.rinko1231.peyroscythe.PeyroScythe;
 import com.rinko1231.peyroscythe.network.data.PeyroClientboundSyncPlayerData;
 import com.rinko1231.peyroscythe.network.spell.ClientboundBlackFireballExplosionParticles;
 import com.rinko1231.peyroscythe.network.spell.ClientboundBloodSiphonReverseParticles;
+import com.rinko1231.peyroscythe.network.spell.ClientboundFlashPacket;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -45,6 +46,12 @@ public class PeyroMessages {
                 .decoder(ClientboundBlackFireballExplosionParticles::new)
                 .encoder(ClientboundBlackFireballExplosionParticles::toBytes)
                 .consumerMainThread(ClientboundBlackFireballExplosionParticles::handle)
+                .add();
+
+        net.messageBuilder(ClientboundFlashPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ClientboundFlashPacket::new)
+                .encoder(ClientboundFlashPacket::toBytes)
+                .consumerMainThread(ClientboundFlashPacket::handle)
                 .add();
 
         // 注册你的 MyClientboundSyncPlayerData 包

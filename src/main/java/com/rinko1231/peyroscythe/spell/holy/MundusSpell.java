@@ -66,11 +66,10 @@ public class MundusSpell extends AbstractSpell {
 
     @Override
     public boolean allowLooting() {
-        return false; //暂时ban了
-        //return PeyroScytheConfig.mundusAllowLooting.get();
+        return PeyroScytheConfig.mundusAllowLooting.get();
     }
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public ResourceLocation getSpellResource() {
@@ -99,6 +98,12 @@ public class MundusSpell extends AbstractSpell {
         }
 
         level.playSound((Player)null, center.x, center.y, center.z, (SoundEvent)SoundRegistry.BLACK_HOLE_CAST.get(), SoundSource.AMBIENT, 4.0F, 1.0F);
+
+        // 同一个施法者只保留最新的一颗"世界"投影，避免旧球残留导致念咒触发到旧位置
+        level.getEntitiesOfClass(MundusEntity.class, entity.getBoundingBox().inflate(64.0D),
+                        old -> old.getOwner() == entity)
+                .forEach(net.minecraft.world.entity.Entity::discard);
+
         MundusEntity mundusEntity = new MundusEntity(level, entity);
         mundusEntity.setRadius(radius);
         mundusEntity.moveTo(center);
