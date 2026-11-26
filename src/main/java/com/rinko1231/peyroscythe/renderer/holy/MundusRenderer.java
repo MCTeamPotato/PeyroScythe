@@ -63,7 +63,7 @@ public class MundusRenderer extends EntityRenderer<MundusEntity> {
         float bob = Mth.sin(time * 0.06F) * 0.04F;
 
         poseStack.pushPose();
-        // 视觉上悬浮在落点上方约 1.2 格，而不是用 4 格碰撞箱的中心
+        // 视觉上悬浮在落点上方约 1.2 格
         poseStack.translate(0.0D, entity.getBbHeight() * 0.3D + bob, 0.0D);
 
         poseStack.pushPose();

@@ -25,12 +25,7 @@ import java.util.*;
 
 import static net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
 
-/**
- * 发金光的“球状”Mundus 特效渲染器
- * 用法：
- *   event.registerBlockEntityRenderer(ModBlocks.MUNDUS_BE.get(), MundusBlockRenderer::new);
- * 并在 LevelRenderer 合适的时机调用 renderEntireBatch（可仿照 Ambersol 的调用点）
- */
+
 public class MundusBlockRenderer<T extends MundusBlockEntity> implements BlockEntityRenderer<T> {
 
     private static final Map<BlockPos, MundusBlockEntity> ALL_ON_SCREEN = new HashMap<>();
@@ -47,7 +42,7 @@ public class MundusBlockRenderer<T extends MundusBlockEntity> implements BlockEn
 
     public MundusBlockRenderer(BlockEntityRendererProvider.Context ctx) {}
 
-    /** 与 Ambersol 同风格：收集后按距离排序批渲染，避免半透明乱序 */
+    // Ambersol 同风格
     public static void renderEntireBatch(LevelRenderer levelRenderer, PoseStack poseStack, int renderTick, Camera camera, float partialTick) {
         if (!ALL_ON_SCREEN.isEmpty()) {
             List<BlockPos> sorted = new ArrayList<>(ALL_ON_SCREEN.keySet());

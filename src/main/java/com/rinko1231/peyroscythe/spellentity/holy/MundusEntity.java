@@ -26,18 +26,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * "世界"（Mundus）的投影：一颗悬浮、旋转、发光的圣物小球。
- * <p>
- * 它本身不做传送，只负责：
- * 1. 标记施法位置（玩家必须靠近它才能念咒）；
- * 2. 给领域内的生物挂上"旅者"标记；
- * 3. 播放光环粒子/音效，存活一段时间后消散。
- * <p>
- * 剩余使用次数与法术等级一致（1/2/3 次），每次成功传送消耗一次；
- * 次数耗尽才会消失。次数与等级都会同步到客户端，用于渲染剩余光点。
- */
+
 public class MundusEntity extends Projectile implements AntiMagicSusceptible {
+
+    /**
+     * 效果等级上限。Iron's 的饰品/buff 可以把法术等级顶到配置上限以上，
+     * 所以"世界"的搜索半径、剩余次数、旅者等级统一在 5 级封顶，避免无限成长。
+     */
+    public static final int MAX_EFFECTIVE_LEVEL = 5;
 
     private static final int BASE_LIFETIME_TICKS = 300;
     private static final int LIFETIME_PER_EXTRA_USE = 100;
@@ -90,7 +86,7 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
     }
 
     public void setSpellLevel(int level) {
-        int clamped = Math.max(1, level);
+        int clamped = Math.min(Math.max(1, level), MAX_EFFECTIVE_LEVEL);
         this.entityData.set(DATA_SPELL_LEVEL, clamped);
         if (!this.level().isClientSide) {
             this.entityData.set(DATA_MAX_USES, clamped);
@@ -102,27 +98,22 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
         return this.entityData.get(DATA_SPELL_LEVEL);
     }
 
-    /** 剩余可传送次数。 */
     public int getUses() {
-        return this.entityData.get(DATA_USES);
+        return Math.min(MAX_EFFECTIVE_LEVEL, Math.max(0, this.entityData.get(DATA_USES)));
     }
 
     public void setUses(int uses) {
-        this.entityData.set(DATA_USES, Math.max(0, uses));
+        this.entityData.set(DATA_USES, Math.min(Math.max(0, uses), MAX_EFFECTIVE_LEVEL));
     }
 
     public int getMaxUses() {
-        return Math.max(1, this.entityData.get(DATA_MAX_USES));
+        return Math.min(MAX_EFFECTIVE_LEVEL, Math.max(1, this.entityData.get(DATA_MAX_USES)));
     }
 
     public void setMaxUses(int maxUses) {
-        this.entityData.set(DATA_MAX_USES, Math.max(1, maxUses));
+        this.entityData.set(DATA_MAX_USES, Math.min(Math.max(1, maxUses), MAX_EFFECTIVE_LEVEL));
     }
 
-    /**
-     * 消耗一次使用次数；返回 true 表示次数耗尽、小球已消散。
-     * 只应在服务端调用。
-     */
     public boolean consumeUse() {
         if (this.level().isClientSide) {
             return false;
@@ -137,7 +128,7 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
         return true;
     }
 
-    /** 消散：粒子爆发 + 音效 + 移除实体。 */
+    //消散
     private void exhaust() {
         if (this.level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.END_ROD,
@@ -189,13 +180,15 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
             this.setRadius(tag.getFloat("Radius"));
         }
         if (tag.contains("SpellLevel")) {
-            this.entityData.set(DATA_SPELL_LEVEL, Math.max(1, tag.getInt("SpellLevel")));
+            this.entityData.set(DATA_SPELL_LEVEL,
+                    Math.min(Math.max(1, tag.getInt("SpellLevel")), MAX_EFFECTIVE_LEVEL));
         }
         if (tag.contains("MaxUses")) {
-            this.entityData.set(DATA_MAX_USES, Math.max(1, tag.getInt("MaxUses")));
+            this.entityData.set(DATA_MAX_USES,
+                    Math.min(Math.max(1, tag.getInt("MaxUses")), MAX_EFFECTIVE_LEVEL));
         }
         if (tag.contains("Uses")) {
-            this.entityData.set(DATA_USES, Math.max(0, tag.getInt("Uses")));
+            this.entityData.set(DATA_USES, Math.min(Math.max(0, tag.getInt("Uses")), MAX_EFFECTIVE_LEVEL));
         }
         super.readAdditionalSaveData(tag);
     }
@@ -209,7 +202,7 @@ public class MundusEntity extends Projectile implements AntiMagicSusceptible {
             this.updateTrackingEntities();
         }
 
-        // 领域内的生物获得"旅者"标记（无粒子、无图标，仅用于氛围/兼容旧逻辑）
+        // 领域内的生物获得"旅者"标记
         AABB box = this.getBoundingBox();
         float radius = (float) box.getXsize();
         Vec3 center = box.getCenter();

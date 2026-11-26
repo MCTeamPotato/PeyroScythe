@@ -45,7 +45,7 @@ public class MundusSpell extends AbstractSpell {
         this.defaultConfig = (new DefaultConfig())
                 .setMinRarity(SpellRarity.LEGENDARY)
                 .setSchoolResource(SchoolRegistry.HOLY_RESOURCE)
-                .setMaxLevel(3)
+                .setMaxLevel(3) // 注册/获取上限 3 级；饰品、buff 可把实战等级顶到 3 以上，效果在 5 级封顶
                 .setCooldownSeconds((double)280.0F)
                 .setAllowCrafting(false)
                 .build();
@@ -86,7 +86,9 @@ public class MundusSpell extends AbstractSpell {
 
 
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
-        float radius = this.getRadius(spellLevel, entity);
+        // 饰品/buff 可以把等级顶得很高，效果统一在 5 级封顶
+        int effectiveLevel = Math.min(Math.max(1, spellLevel), MundusEntity.MAX_EFFECTIVE_LEVEL);
+        float radius = this.getRadius(effectiveLevel, entity);
         HitResult raycast = Utils.raycastForEntity(level, entity, 16.0F + radius * 1.5F, true);
         Vec3 center = raycast.getLocation();
         if (raycast instanceof BlockHitResult blockHitResult) {
@@ -107,7 +109,7 @@ public class MundusSpell extends AbstractSpell {
         MundusEntity mundusEntity = new MundusEntity(level, entity);
         mundusEntity.setRadius(radius);
         mundusEntity.moveTo(center);
-        mundusEntity.setSpellLevel(spellLevel);
+        mundusEntity.setSpellLevel(effectiveLevel);
         level.addFreshEntity(mundusEntity);
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }
@@ -118,7 +120,8 @@ public class MundusSpell extends AbstractSpell {
     }
 
     private float getSearchRadius(int spellLevel) {
-        return min(32 + 32 * spellLevel, 160);
+        int effectiveLevel = Math.min(Math.max(1, spellLevel), MundusEntity.MAX_EFFECTIVE_LEVEL);
+        return min(32 + 32 * effectiveLevel, 160);
     }
 
     public AnimationHolder getCastStartAnimation() {

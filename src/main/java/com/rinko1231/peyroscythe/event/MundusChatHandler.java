@@ -46,7 +46,7 @@ public final class MundusChatHandler {
         // 咒语不进入公共聊天
         event.setCanceled(true);
 
-        int spellLevel = Math.max(1, orb.getSpellLevel());
+        int spellLevel = Math.min(Math.max(1, orb.getSpellLevel()), MundusEntity.MAX_EFFECTIVE_LEVEL);
         int searchRadius = Math.min(32 + 32 * spellLevel, 160);
 
         TeleportHelper.tpToNearestVillage(player, searchRadius, orb);
