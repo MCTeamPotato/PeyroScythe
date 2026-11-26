@@ -132,13 +132,16 @@ dependencies {
     runtimeOnly "curse.maven:oworld2create-refoxed-1177037:6075204"
     //runtimeOnly "curse.maven:mo-enchantments-621282:6509664"
     runtimeOnly "curse.maven:lendercataclysm-551586:6720987"
-    implementation "curse.maven:curios-309927:6529130"
+
     implementation "curse.maven:lionfish-api-1001614:6168249"
 
-    implementation "curse.maven:geckolib-388172:6659026"
-    runtimeOnly "curse.maven:playeranimator-658587:6024462"
     implementation "curse.maven:better-combat-by-daedelus-639842:6532547"
-    implementation "curse.maven:irons-spells-n-spellbooks-855414:7691161"
+
+    implementation "curse.maven:irons-spells-n-spellbooks-855414:9702219"
+    implementation "curse.maven:irons-lib-1492763:9687938"
+    implementation "curse.maven:curios-309927:9806453"
+    implementation "curse.maven:geckolib-388172:9748637"
+    runtimeOnly "curse.maven:playeranimator-658587:7389814"
 
     runtimeOnly "curse.maven:better-third-person-435044:5833474"
 
