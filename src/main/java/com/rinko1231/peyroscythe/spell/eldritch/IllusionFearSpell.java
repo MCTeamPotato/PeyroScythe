@@ -93,7 +93,7 @@ public class IllusionFearSpell extends AbstractSpell {
                     target.removeEffect(MobEffectRegistry.ILLUSION_CRAZY);
 
                 // 添加恐惧效果
-                // 仅对怪物生效的 debuff，不需要图标：ambient=false, visible=false, showIcon=false
+                // 仅对怪物生效的 debuff，不需要图标
                 target.addEffect(new MobEffectInstance(MobEffectRegistry.ILLUSION_FEAR, this.getDuration(spellLevel, entity), this.getAmplifier(spellLevel, entity), false, false, false));
             }
         }
