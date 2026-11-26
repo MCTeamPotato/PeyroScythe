@@ -1,5 +1,6 @@
 package com.rinko1231.peyroscythe.effect.illusion;
 
+import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.init.TagsRegistry;
 import io.redspace.ironsspellbooks.effect.MagicMobEffect;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +29,10 @@ public class IllusionFearEffect extends MagicMobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!(entity instanceof PathfinderMob mob)) return false;
+        if (!(entity instanceof PathfinderMob mob)) {
+            entity.removeEffect(MobEffectRegistry.ILLUSION_FEAR);
+            return false;
+        }
         if (mob.level().isClientSide) return true;
         if(entity.getType().is(TagsRegistry.ILLUSION_IMMUNE)) {
 

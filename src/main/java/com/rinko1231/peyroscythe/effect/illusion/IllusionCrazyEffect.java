@@ -1,6 +1,7 @@
 package com.rinko1231.peyroscythe.effect.illusion;
 
 import com.rinko1231.peyroscythe.config.PeyroScytheConfig;
+import com.rinko1231.peyroscythe.init.MobEffectRegistry;
 import com.rinko1231.peyroscythe.init.TagsRegistry;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.effect.MagicMobEffect;
@@ -33,6 +34,7 @@ public class IllusionCrazyEffect extends MagicMobEffect {
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!(entity instanceof PathfinderMob mob)) {
+            entity.removeEffect(MobEffectRegistry.ILLUSION_CRAZY);
             return false;
         }
         if (mob.level().isClientSide) return true;
